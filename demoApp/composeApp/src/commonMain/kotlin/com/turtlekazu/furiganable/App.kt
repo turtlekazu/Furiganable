@@ -10,11 +10,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import furiganable.demoapp.composeapp.generated.resources.Res
+import furiganable.demoapp.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import friganable.composeapp.generated.resources.Res
-import friganable.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 @Preview
