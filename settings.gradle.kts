@@ -28,4 +28,5 @@ dependencyResolutionManagement {
     }
 }
 
-include(":composeApp")
+include(":demoApp:composeApp")
+include(":furiganable")
