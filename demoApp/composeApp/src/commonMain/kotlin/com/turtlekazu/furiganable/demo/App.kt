@@ -1,4 +1,4 @@
-package com.turtlekazu.furiganable
+package com.turtlekazu.furiganable.demo
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image

@@ -1,4 +1,4 @@
-package com.turtlekazu.furiganable
+package com.turtlekazu.furiganable.demo
 
 import androidx.compose.ui.window.ComposeUIViewController
 

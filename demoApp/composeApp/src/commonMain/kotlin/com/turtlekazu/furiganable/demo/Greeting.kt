@@ -1,4 +1,4 @@
-package com.turtlekazu.furiganable
+package com.turtlekazu.furiganable.demo
 
 class Greeting {
     private val platform = getPlatform()

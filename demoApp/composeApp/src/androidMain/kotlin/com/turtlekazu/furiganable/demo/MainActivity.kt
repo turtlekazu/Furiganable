@@ -1,4 +1,4 @@
-package com.turtlekazu.furiganable
+package com.turtlekazu.furiganable.demo
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
