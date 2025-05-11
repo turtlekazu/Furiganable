@@ -8,9 +8,6 @@ plugins {
     alias(libs.plugins.mavenPublish)
 }
 
-group = "com.turtlekazu.furiganable"
-version = "0.0.0"
-
 kotlin {
     androidTarget {
         compilerOptions {
@@ -49,7 +46,7 @@ kotlin {
 }
 
 android {
-    namespace = project.group.toString()
+    namespace = "com.turtlekazu.lib.furiganable"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
@@ -78,4 +75,3 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-
