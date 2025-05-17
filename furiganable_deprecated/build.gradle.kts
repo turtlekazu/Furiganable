@@ -22,7 +22,7 @@ kotlin {
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "furiganable"
+            baseName = "furiganable_deprecated"
             isStatic = true
         }
     }
@@ -47,7 +47,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.turtlekazu.lib.furiganable"
+    namespace = "com.turtlekazu.lib.furiganable_deprecated"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
