@@ -1,4 +1,4 @@
-rootProject.name = "Furiganable"
+rootProject.name = "furiganable-root"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -29,3 +29,4 @@ dependencyResolutionManagement {
 }
 
 include(":demoApp:composeApp")
+include(":furiganable")
