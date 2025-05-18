@@ -1,8 +1,9 @@
 package com.turtlekazu.lib.furiganable
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.LocalTextStyle
@@ -58,9 +59,9 @@ fun TextWithReadingM2(
                     showReadings = showReadings,
                     color = color,
                     fontSize = fontSize,
+                    fontStyle = fontStyle,
                     fontWeight = fontWeight,
                     fontFamily = fontFamily,
-                    fontStyle = fontStyle,
                     letterSpacing = letterSpacing,
                     textDecoration = textDecoration,
                     textAlign = textAlign,
@@ -71,10 +72,10 @@ fun TextWithReadingM2(
 
         Text(
             text = textContent,
-            inlineContent = inlineContent,
             modifier = modifier,
             color = color,
             fontSize = fontSize,
+            fontStyle = fontStyle,
             fontWeight = fontWeight,
             fontFamily = fontFamily,
             letterSpacing = letterSpacing,
@@ -85,6 +86,7 @@ fun TextWithReadingM2(
             softWrap = softWrap,
             maxLines = maxLines,
             minLines = minLines,
+            inlineContent = inlineContent,
             onTextLayout = onTextLayout ?: {},
             style = style,
         )
@@ -116,13 +118,13 @@ private fun calculateAnnotatedStringM2(
     showReadings: Boolean,
     color: Color,
     fontSize: TextUnit,
+    fontStyle: FontStyle?,
     fontWeight: FontWeight?,
     fontFamily: FontFamily?,
-    fontStyle: FontStyle?,
-    lineHeight: TextUnit,
-    textAlign: TextAlign?,
-    textDecoration: TextDecoration?,
     letterSpacing: TextUnit,
+    textDecoration: TextDecoration?,
+    textAlign: TextAlign?,
+    lineHeight: TextUnit,
     style: TextStyle,
 ): Pair<AnnotatedString, Map<String, InlineTextContent>> {
     val inlineContent = mutableMapOf<String, InlineTextContent>()
@@ -137,17 +139,17 @@ private fun calculateAnnotatedStringM2(
                 continue
             }
 
-            val width = (text.length.toDouble() + (text.length - 1) * 0.05).em
+            val width = (text.length.toDouble() + (text.length - 1) * 0.07).em
             val mergedStyle = style.merge(
                 color = color,
                 fontSize = fontSize,
                 fontWeight = fontWeight,
-                textAlign = textAlign ?: TextAlign.Unspecified,
-                lineHeight = lineHeight,
-                fontFamily = fontFamily,
-                textDecoration = textDecoration,
                 fontStyle = fontStyle,
-                letterSpacing = letterSpacing
+                fontFamily = fontFamily,
+                letterSpacing = letterSpacing,
+                textAlign = textAlign ?: TextAlign.Unspecified,
+                textDecoration = textDecoration,
+                lineHeight = lineHeight,
             )
             val height = mergedStyle.lineHeight
             appendInlineContent(text, text)
@@ -163,45 +165,27 @@ private fun calculateAnnotatedStringM2(
                     val readingFontSize = mergedStyle.fontSize / 2
 
                     Box(
-                        modifier = Modifier
-                            .wrapContentSize(),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(
+                        BasicText(
                             text = text,
-                            color = color,
-                            fontSize = fontSize,
-                            fontWeight = fontWeight,
-                            textAlign = textAlign ?: TextAlign.Unspecified,
-                            lineHeight = lineHeight,
-                            fontFamily = fontFamily,
-                            textDecoration = textDecoration,
-                            fontStyle = fontStyle,
-                            letterSpacing = letterSpacing,
-                            style = style,
+                            style = mergedStyle,
                         )
 
                         Box(
                             modifier =
                                 Modifier
                                     .graphicsLayer {
-                                        translationY = -(readingFontSize.toPx() * 1.6f)
+                                        translationY = -(readingFontSize.toPx() * 1.5f)
                                     },
                         ) {
                             if (showReadings) {
-                                Text(
+                                BasicText(
                                     modifier = Modifier.wrapContentWidth(unbounded = true),
-                                    color = color,
                                     text = reading,
-                                    fontSize = readingFontSize,
-                                    fontWeight = fontWeight,
-                                    textAlign = textAlign ?: TextAlign.Unspecified,
-                                    lineHeight = lineHeight,
-                                    fontFamily = fontFamily,
-                                    textDecoration = textDecoration,
-                                    fontStyle = fontStyle,
-                                    letterSpacing = letterSpacing,
-                                    style = style,
+                                    style = style.copy(
+                                        fontSize = readingFontSize,
+                                    ),
                                 )
                             }
                         }
