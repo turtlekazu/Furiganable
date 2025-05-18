@@ -50,13 +50,11 @@ fun TextWithReadingM2(
     showReadings: Boolean = true,
 ) {
     if (text.hasReadings() && showReadings) {
-        val textDataList: List<TextData> = remember(text) {
-            text.toTextData()
-        }
+
         val (textContent, inlineContent) =
             remember(text) {
                 calculateAnnotatedStringM2(
-                    textDataList = textDataList,
+                    textDataList = text.toTextData(),
                     showReadings = showReadings,
                     color = color,
                     fontSize = fontSize,
