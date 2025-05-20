@@ -27,7 +27,7 @@ fun App() {
         ) {
             val text =
                 "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。[複数行[ふくすうぎょう]]にも[対応[たいおう]]していることを[検証[けんしょう]]するために[長[なが]]くしています。"
-            val text_en =
+            val textAlt =
                 "This is a test string. It is long to verify that it supports multiple lines."
             Column(
                 Modifier.fillMaxWidth(),
@@ -40,7 +40,7 @@ fun App() {
                 )
 
                 TextWithReadingM2(
-                    text_en,
+                    textAlt,
                     style = MaterialTheme.typography.h3,
                 )
 
@@ -50,7 +50,7 @@ fun App() {
                 )
 
                 TextWithReadingM2(
-                    text_en,
+                    textAlt,
                     style = MaterialTheme.typography.h4,
                 )
 
@@ -60,7 +60,7 @@ fun App() {
                 )
 
                 TextWithReadingM2(
-                    text_en,
+                    textAlt,
                     style = MaterialTheme.typography.h5,
                 )
 
@@ -70,7 +70,7 @@ fun App() {
                 )
 
                 TextWithReadingM2(
-                    text_en,
+                    textAlt,
                     style = MaterialTheme.typography.h6,
                 )
 
@@ -80,7 +80,7 @@ fun App() {
                 )
 
                 TextWithReadingM2(
-                    text_en,
+                    textAlt,
                     style = MaterialTheme.typography.body1,
                 )
 
@@ -90,7 +90,7 @@ fun App() {
                 )
 
                 TextWithReadingM2(
-                    text_en,
+                    textAlt,
                     style = MaterialTheme.typography.subtitle1,
                 )
             }
