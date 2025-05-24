@@ -61,7 +61,7 @@ fun TextWithReadingM2(
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     style: TextStyle = LocalTextStyle.current,
     showReadings: Boolean = true,
-    lineHeightAddRatio: Float = 0.6f,
+    lineHeightAddRatio: Float = 0.5f,
     furiganaFontSizeRatio: Float = 0.5f,
     furiganaSpacingRatio: Float = 0.1f,
     furiganaLetterSpacingReduceRatio: Float = 0.05f,

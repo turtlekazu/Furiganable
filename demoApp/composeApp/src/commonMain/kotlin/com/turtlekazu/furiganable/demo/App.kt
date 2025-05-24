@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -29,7 +30,10 @@ fun App() {
             val textAlt =
                 "This is a test string. It is long to verify that it supports multiple lines."
             Column(
-                Modifier.fillMaxWidth().safeDrawingPadding(),
+                Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth()
+                    .safeDrawingPadding(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
