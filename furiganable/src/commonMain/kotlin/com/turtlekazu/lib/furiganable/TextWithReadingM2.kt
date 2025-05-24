@@ -1,6 +1,7 @@
 package com.turtlekazu.lib.furiganable
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.InlineTextContent
@@ -138,7 +139,6 @@ private fun calculateAnnotatedStringM2(
                 continue
             }
 
-            val width = (text.length.toDouble() + (text.length - 1) * 0.07).em
             val mergedStyle = style.merge(
                 color = color,
                 fontSize = fontSize,
@@ -151,9 +151,10 @@ private fun calculateAnnotatedStringM2(
                 lineHeight = lineHeight,
             )
             val height = mergedStyle.lineHeight
+            val width = (text.length.toDouble() + (text.length - 1) * 0.07).em
+
             appendInlineContent(text, text)
             inlineContent[text] = InlineTextContent(
-                // TODO: find out why height and width need magic numbers.
                 placeholder =
                     Placeholder(
                         width = width,
@@ -165,8 +166,9 @@ private fun calculateAnnotatedStringM2(
 
                     Box(
                         contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
-                        BasicText(
+                        TextSpacingRemovedM2(
                             text = text,
                             style = mergedStyle,
                         )
