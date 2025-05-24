@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.isUnspecified
 import androidx.compose.ui.unit.sp
 
@@ -72,6 +73,12 @@ fun TextWithReadingM2(
                 )
             }
 
+        val adjustedLineHeight = adjustedLineHeight(
+            lineHeight = lineHeight,
+            fontSize = fontSize,
+            style = style,
+        )
+
         Text(
             text = textContent,
             modifier = modifier,
@@ -83,7 +90,7 @@ fun TextWithReadingM2(
             letterSpacing = letterSpacing,
             textDecoration = textDecoration,
             textAlign = textAlign,
-            lineHeight = lineHeight,
+            lineHeight = adjustedLineHeight,
             overflow = overflow,
             softWrap = softWrap,
             maxLines = maxLines,
@@ -91,11 +98,7 @@ fun TextWithReadingM2(
             inlineContent = inlineContent,
             onTextLayout = onTextLayout ?: {},
             style = style.copy(
-                lineHeight = if (style.lineHeight.isUnspecified || fontSize.isUnspecified) {
-                    TextUnit.Unspecified
-                } else {
-                    (style.lineHeight.value + (fontSize.value * 0.95)).sp
-                }
+                lineHeight = adjustedLineHeight,
             ),
         )
     } else {
@@ -185,7 +188,7 @@ private fun calculateAnnotatedStringM2(
                             modifier =
                                 Modifier
                                     .graphicsLayer {
-                                        translationY = -(readingFontSize.toPx() * 1.5f)
+                                        translationY = -(readingFontSize.toPx() * getFuriganaPosition())
                                     },
                         ) {
                             if (showReadings) {
@@ -203,4 +206,20 @@ private fun calculateAnnotatedStringM2(
             )
         }
     } to inlineContent
+}
+
+private fun adjustedLineHeight(
+    lineHeight: TextUnit,
+    fontSize: TextUnit,
+    style: TextStyle,
+    addRatio: Float = 0.6f
+): TextUnit = when {
+    lineHeight.isSpecified && fontSize.isSpecified ->
+        (lineHeight.value + style.fontSize.value * addRatio).sp
+    lineHeight.isSpecified ->
+        (lineHeight.value + style.fontSize.value * addRatio).sp
+    fontSize.isSpecified ->
+        (style.lineHeight.value + fontSize.value * addRatio).sp
+    else ->
+        (style.lineHeight.value + style.fontSize.value * addRatio).sp
 }
