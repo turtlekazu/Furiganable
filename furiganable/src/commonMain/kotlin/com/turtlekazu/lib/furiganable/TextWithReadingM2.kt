@@ -192,11 +192,18 @@ private fun calculateAnnotatedStringM2(
                                     },
                         ) {
                             if (showReadings) {
+                                val adjustedLetterSpacing = if (fontSize.isSpecified) {
+                                    (-fontSize.value * 0.05).sp
+                                } else {
+                                    (-style.fontSize.value * 0.05).sp
+                                }
+
                                 BasicText(
                                     modifier = Modifier.wrapContentWidth(unbounded = true),
                                     text = reading,
                                     style = style.copy(
                                         fontSize = readingFontSize,
+                                        letterSpacing = adjustedLetterSpacing,
                                     ),
                                 )
                             }
