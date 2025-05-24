@@ -28,6 +28,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.isUnspecified
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun TextWithReadingM2(
@@ -88,7 +90,13 @@ fun TextWithReadingM2(
             minLines = minLines,
             inlineContent = inlineContent,
             onTextLayout = onTextLayout ?: {},
-            style = style,
+            style = style.copy(
+                lineHeight = if (style.lineHeight.isUnspecified || fontSize.isUnspecified) {
+                    TextUnit.Unspecified
+                } else {
+                    (style.lineHeight.value + (fontSize.value * 0.95)).sp
+                }
+            ),
         )
     } else {
         Text(
