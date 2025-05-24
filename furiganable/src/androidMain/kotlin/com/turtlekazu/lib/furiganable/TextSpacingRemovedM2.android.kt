@@ -2,6 +2,7 @@ package com.turtlekazu.lib.furiganable
 
 import android.graphics.Typeface
 import android.os.Build
+import android.text.TextPaint
 import android.util.TypedValue
 import android.widget.TextView
 import androidx.compose.material.LocalContentAlpha
@@ -49,6 +50,7 @@ actual fun TextSpacingRemovedM2(
     style: TextStyle,
 ) {
     val context = LocalContext.current
+    val density = LocalDensity.current
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
         Text(
@@ -108,47 +110,63 @@ actual fun TextSpacingRemovedM2(
                 TextView(context).apply {
                     isFallbackLineSpacing = false
                     includeFontPadding = false
-                    setTextColor(overrideColorOrUnspecified.toArgb())
-                    setTextSize(
-                        TypedValue.COMPLEX_UNIT_SP,
-                        mergedStyle.fontSize.value,
-                    )
-
-                    val lineSpacingPx = TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_SP,
-                        mergedStyle.lineHeight.value - mergedStyle.fontSize.value,
-                        context.resources.displayMetrics,
-                    )
-                    setLineSpacing(lineSpacingPx, 1f)
-
-                    this.letterSpacing = mergedStyle.letterSpacing.value / mergedStyle.fontSize.value
-
-                    setMaxLines(maxLines)
-                    setMinLines(minLines)
-                    this.isSingleLine = !softWrap
-                    this.textAlignment = when (textAlign) {
-                        TextAlign.Center -> TextView.TEXT_ALIGNMENT_CENTER
-                        TextAlign.End -> TextView.TEXT_ALIGNMENT_TEXT_END
-                        TextAlign.Left -> TextView.TEXT_ALIGNMENT_VIEW_START
-                        TextAlign.Right -> TextView.TEXT_ALIGNMENT_VIEW_END
-                        TextAlign.Justify -> TextView.TEXT_ALIGNMENT_TEXT_START
-                        else -> TextView.TEXT_ALIGNMENT_TEXT_START
-                    }
-                    if (textDecoration != null) {
-                        this.paint.isUnderlineText =
-                            textDecoration.contains(TextDecoration.Underline)
-                        this.paint.isStrikeThruText =
-                            textDecoration.contains(TextDecoration.LineThrough)
-                    }
-                    this.ellipsize = when (overflow) {
-                        TextOverflow.Ellipsis -> android.text.TextUtils.TruncateAt.END
-                        else -> null
-                    }
-                    this.typeface = typeface
-
-                    this.text = text
                 }
             },
+            update = { textView ->
+                textView.setTextColor(overrideColorOrUnspecified.toArgb())
+                textView.setTextSize(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    mergedStyle.fontSize.value,
+                )
+
+                fun calcSingleLinePadding(
+                    paint: TextPaint,
+                    lineHeightPx: Float
+                ): Pair<Int, Int> {
+                    val fm        = paint.fontMetricsInt
+                    val glyphBox  = kotlin.math.abs(fm.ascent) + fm.descent
+                    val extra     = (lineHeightPx - glyphBox).coerceAtLeast(0f)
+                    val topPad    = (extra / 2f).toInt()
+                    val bottomPad = extra.toInt() - topPad
+
+                    return topPad to bottomPad
+                }
+
+                val lineHeightPx = mergedStyle.lineHeight.value * density.density
+                textView.lineHeight = (lineHeightPx).toInt()
+                textView.letterSpacing = mergedStyle.letterSpacing.value / mergedStyle.fontSize.value
+
+                val (paddingTop, paddingBottom) = calcSingleLinePadding(
+                    paint = textView.paint,
+                    lineHeightPx,
+                )
+                textView.setPadding(0, paddingTop, 0, paddingBottom)
+
+                textView.setMaxLines(maxLines)
+                textView.setMinLines(minLines)
+                textView.isSingleLine = !softWrap
+                textView.textAlignment = when (textAlign) {
+                    TextAlign.Center -> TextView.TEXT_ALIGNMENT_CENTER
+                    TextAlign.End -> TextView.TEXT_ALIGNMENT_TEXT_END
+                    TextAlign.Left -> TextView.TEXT_ALIGNMENT_VIEW_START
+                    TextAlign.Right -> TextView.TEXT_ALIGNMENT_VIEW_END
+                    TextAlign.Justify -> TextView.TEXT_ALIGNMENT_TEXT_START
+                    else -> TextView.TEXT_ALIGNMENT_TEXT_START
+                }
+                if (textDecoration != null) {
+                    textView.paint.isUnderlineText =
+                        textDecoration.contains(TextDecoration.Underline)
+                    textView.paint.isStrikeThruText =
+                        textDecoration.contains(TextDecoration.LineThrough)
+                }
+                textView.ellipsize = when (overflow) {
+                    TextOverflow.Ellipsis -> android.text.TextUtils.TruncateAt.END
+                    else -> null
+                }
+                textView.typeface = typeface
+
+                textView.text = text
+            }
         )
     }
 }
