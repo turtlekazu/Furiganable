@@ -1,6 +1,5 @@
 package com.turtlekazu.lib.furiganable
 
-import androidx.compose.material.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,10 +14,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 
 @Composable
-expect fun TextSpacingRemovedM2(
+expect fun TextSpacingRemoved(
     text: String,
+    color: Color,
+    style: TextStyle,
     modifier: Modifier = Modifier,
-    color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
@@ -32,5 +32,4 @@ expect fun TextSpacingRemovedM2(
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
-    style: TextStyle = LocalTextStyle.current,
 )

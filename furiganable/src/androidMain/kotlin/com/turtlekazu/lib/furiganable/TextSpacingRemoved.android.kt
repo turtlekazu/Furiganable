@@ -5,9 +5,7 @@ import android.os.Build
 import android.text.TextPaint
 import android.util.TypedValue
 import android.widget.TextView
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.Text
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -30,10 +28,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
-actual fun TextSpacingRemovedM2(
+actual fun TextSpacingRemoved(
     text: String,
-    modifier: Modifier,
     color: Color,
+    style: TextStyle,
+    modifier: Modifier,
     fontSize: TextUnit,
     fontStyle: FontStyle?,
     fontWeight: FontWeight?,
@@ -47,40 +46,38 @@ actual fun TextSpacingRemovedM2(
     maxLines: Int,
     minLines: Int,
     onTextLayout: ((TextLayoutResult) -> Unit)?,
-    style: TextStyle,
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-        Text(
-            text = text,
-            modifier = modifier,
-            color = color,
-            fontSize = fontSize,
-            fontStyle = fontStyle,
-            fontWeight = fontWeight,
-            fontFamily = fontFamily,
-            letterSpacing = letterSpacing,
-            textDecoration = textDecoration,
-            textAlign = textAlign,
-            lineHeight = lineHeight,
-            overflow = overflow,
-            softWrap = softWrap,
-            maxLines = maxLines,
-            minLines = minLines,
-            onTextLayout = onTextLayout,
-            style = style,
+        BasicText(
+            text,
+            modifier,
+            style.merge(
+                color = color,
+                fontSize = fontSize,
+                fontWeight = fontWeight,
+                textAlign = textAlign ?: TextAlign.Unspecified,
+                lineHeight = lineHeight,
+                fontFamily = fontFamily,
+                textDecoration = textDecoration,
+                fontStyle = fontStyle,
+                letterSpacing = letterSpacing
+            ),
+            onTextLayout,
+            overflow,
+            softWrap,
+            maxLines,
+            minLines
         )
     } else {
-        val localContentColor = LocalContentColor.current
-        val localContentAlpha = LocalContentAlpha.current
         val overrideColorOrUnspecified: Color = if (color.isSpecified) {
             color
         } else if (style.color.isSpecified) {
             style.color
         } else {
-            localContentColor.copy(localContentAlpha)
+            color
         }
 
         val mergedStyle = style.merge(
@@ -123,10 +120,10 @@ actual fun TextSpacingRemovedM2(
                     paint: TextPaint,
                     lineHeightPx: Float
                 ): Pair<Int, Int> {
-                    val fm        = paint.fontMetricsInt
-                    val glyphBox  = kotlin.math.abs(fm.ascent) + fm.descent
-                    val extra     = (lineHeightPx - glyphBox).coerceAtLeast(0f)
-                    val topPad    = (extra / 2f).toInt()
+                    val fm = paint.fontMetricsInt
+                    val glyphBox = kotlin.math.abs(fm.ascent) + fm.descent
+                    val extra = (lineHeightPx - glyphBox).coerceAtLeast(0f)
+                    val topPad = (extra / 2f).toInt()
                     val bottomPad = extra.toInt() - topPad
 
                     return topPad to bottomPad
@@ -134,7 +131,8 @@ actual fun TextSpacingRemovedM2(
 
                 val lineHeightPx = mergedStyle.lineHeight.value * density.density
                 textView.lineHeight = (lineHeightPx).toInt()
-                textView.letterSpacing = mergedStyle.letterSpacing.value / mergedStyle.fontSize.value
+                textView.letterSpacing =
+                    mergedStyle.letterSpacing.value / mergedStyle.fontSize.value
 
                 val (paddingTop, paddingBottom) = calcSingleLinePadding(
                     paint = textView.paint,

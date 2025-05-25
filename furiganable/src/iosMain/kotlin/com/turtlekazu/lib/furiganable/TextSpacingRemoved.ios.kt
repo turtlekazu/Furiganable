@@ -1,6 +1,6 @@
 package com.turtlekazu.lib.furiganable
 
-import androidx.compose.material.Text
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,10 +15,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 
 @Composable
-actual fun TextSpacingRemovedM2(
+actual fun TextSpacingRemoved(
     text: String,
-    modifier: Modifier,
     color: Color,
+    style: TextStyle,
+    modifier: Modifier,
     fontSize: TextUnit,
     fontStyle: FontStyle?,
     fontWeight: FontWeight?,
@@ -32,26 +33,26 @@ actual fun TextSpacingRemovedM2(
     maxLines: Int,
     minLines: Int,
     onTextLayout: ((TextLayoutResult) -> Unit)?,
-    style: TextStyle,
 ) {
     // Just wrapping the normal Text composable
-    Text(
-        text = text,
-        modifier = modifier,
-        color = color,
-        fontSize = fontSize,
-        fontStyle = fontStyle,
-        fontWeight = fontWeight,
-        fontFamily = fontFamily,
-        letterSpacing = letterSpacing,
-        textDecoration = textDecoration,
-        textAlign = textAlign,
-        lineHeight = lineHeight,
-        overflow = overflow,
-        softWrap = softWrap,
-        maxLines = maxLines,
-        minLines = minLines,
-        onTextLayout = onTextLayout,
-        style = style,
+    BasicText(
+        text,
+        modifier,
+        style.merge(
+            color = color,
+            fontSize = fontSize,
+            fontWeight = fontWeight,
+            textAlign = textAlign ?: TextAlign.Unspecified,
+            lineHeight = lineHeight,
+            fontFamily = fontFamily,
+            textDecoration = textDecoration,
+            fontStyle = fontStyle,
+            letterSpacing = letterSpacing
+        ),
+        onTextLayout,
+        overflow,
+        softWrap,
+        maxLines,
+        minLines
     )
 }
