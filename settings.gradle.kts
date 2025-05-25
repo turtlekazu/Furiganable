@@ -30,3 +30,5 @@ dependencyResolutionManagement {
 
 include(":demoApp:composeApp")
 include(":furiganable:compose-core")
+include(":furiganable:compose-m2")
+include(":furiganable:compose-m3")
