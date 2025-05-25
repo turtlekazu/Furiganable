@@ -1,4 +1,4 @@
-package com.turtlekazu.furiganable.compose.core
+package com.turtlekazu.furiganable.compose.m3
 
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material3.LocalContentColor
@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import com.turtlekazu.furiganable.compose.core.TextWithReading
 
 @Composable
 fun TextWithReadingM3(

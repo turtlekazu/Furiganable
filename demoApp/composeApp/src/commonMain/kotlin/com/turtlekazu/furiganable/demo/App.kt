@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.turtlekazu.furiganable.compose.core.TextWithReadingM2
+import com.turtlekazu.furiganable.compose.m2.TextWithReadingM2
 
 @Composable
 fun App() {
