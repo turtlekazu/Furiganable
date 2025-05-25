@@ -99,12 +99,12 @@ fun TextWithReading(
     furiganaSpacingRatio: Float = 0.1f,
     furiganaLetterSpacingReduceRatio: Float = 0.05f,
 ) {
-    val textColor = color.takeOrElse {
-        style.color.takeOrElse { Color.Black }
-    }
+    val textColor =
+        color.takeOrElse {
+            style.color.takeOrElse { Color.Black }
+        }
 
     if (text.hasReadings() && showReadings) {
-
         val (textContent, inlineContent) =
             remember(text) {
                 calculateAnnotatedString(
@@ -126,27 +126,29 @@ fun TextWithReading(
                 )
             }
 
-        val adjustedLineHeight = adjustedLineHeight(
-            lineHeight = lineHeight,
-            fontSize = fontSize,
-            style = style,
-            addRatio = lineHeightAddRatio,
-        )
+        val adjustedLineHeight =
+            adjustedLineHeight(
+                lineHeight = lineHeight,
+                fontSize = fontSize,
+                style = style,
+                addRatio = lineHeightAddRatio,
+            )
 
         BasicText(
             text = textContent,
             modifier = modifier,
-            style = style.merge(
-                color = textColor,
-                fontSize = fontSize,
-                fontWeight = fontWeight,
-                textAlign = textAlign ?: TextAlign.Unspecified,
-                lineHeight = adjustedLineHeight,
-                fontFamily = fontFamily,
-                textDecoration = textDecoration,
-                fontStyle = fontStyle,
-                letterSpacing = letterSpacing
-            ),
+            style =
+                style.merge(
+                    color = textColor,
+                    fontSize = fontSize,
+                    fontWeight = fontWeight,
+                    textAlign = textAlign ?: TextAlign.Unspecified,
+                    lineHeight = adjustedLineHeight,
+                    fontFamily = fontFamily,
+                    textDecoration = textDecoration,
+                    fontStyle = fontStyle,
+                    letterSpacing = letterSpacing,
+                ),
             onTextLayout = onTextLayout,
             overflow = overflow,
             softWrap = softWrap,
@@ -167,13 +169,13 @@ fun TextWithReading(
                 fontFamily = fontFamily,
                 textDecoration = textDecoration,
                 fontStyle = fontStyle,
-                letterSpacing = letterSpacing
+                letterSpacing = letterSpacing,
             ),
             onTextLayout,
             overflow,
             softWrap,
             maxLines,
-            minLines
+            minLines,
         )
     }
 }
@@ -207,71 +209,76 @@ private fun calculateAnnotatedString(
                 continue
             }
 
-            val mergedStyle = style.merge(
-                color = color,
-                fontSize = fontSize,
-                fontWeight = fontWeight,
-                fontStyle = fontStyle,
-                fontFamily = fontFamily,
-                letterSpacing = letterSpacing,
-                textAlign = textAlign ?: TextAlign.Unspecified,
-                textDecoration = textDecoration,
-                lineHeight = lineHeight,
-            )
+            val mergedStyle =
+                style.merge(
+                    color = color,
+                    fontSize = fontSize,
+                    fontWeight = fontWeight,
+                    fontStyle = fontStyle,
+                    fontFamily = fontFamily,
+                    letterSpacing = letterSpacing,
+                    textAlign = textAlign ?: TextAlign.Unspecified,
+                    textDecoration = textDecoration,
+                    lineHeight = lineHeight,
+                )
             val height = mergedStyle.lineHeight
             val width = (text.length.toDouble() + (text.length - 1) * 0.05).em
 
             appendInlineContent(text, text)
-            inlineContent[text] = InlineTextContent(
-                placeholder =
-                    Placeholder(
-                        width = width,
-                        height = height,
-                        placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
-                    ),
-                children = {
-                    val readingFontSize = mergedStyle.fontSize * furiganaFontSizeRatio
+            inlineContent[text] =
+                InlineTextContent(
+                    placeholder =
+                        Placeholder(
+                            width = width,
+                            height = height,
+                            placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
+                        ),
+                    children = {
+                        val readingFontSize = mergedStyle.fontSize * furiganaFontSizeRatio
 
-                    Box(
-                        contentAlignment = Alignment.TopCenter,
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        TextSpacingRemoved(
-                            modifier = Modifier.wrapContentWidth(unbounded = true),
-                            text = text,
-                            color = mergedStyle.color,
-                            style = mergedStyle,
-                        )
+                        Box(
+                            contentAlignment = Alignment.TopCenter,
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            TextSpacingRemoved(
+                                modifier = Modifier.wrapContentWidth(unbounded = true),
+                                text = text,
+                                color = mergedStyle.color,
+                                style = mergedStyle,
+                            )
 
-                        if (showReadings) {
-                            val adjustedfuriganaSpacingRatio =
-                                1 + furiganaSpacingRatio + getFuriganaSpacingCompensation()
-                            Box(
-                                modifier = Modifier.graphicsLayer {
-                                    translationY = -0.5f * readingFontSize.toPx() +
-                                            -0.5f * mergedStyle.fontSize.toPx() *
-                                            adjustedfuriganaSpacingRatio
+                            if (showReadings) {
+                                val adjustedfuriganaSpacingRatio =
+                                    1 + furiganaSpacingRatio + getFuriganaSpacingCompensation()
+                                Box(
+                                    modifier =
+                                        Modifier.graphicsLayer {
+                                            translationY = -0.5f * readingFontSize.toPx() +
+                                                -0.5f * mergedStyle.fontSize.toPx() *
+                                                adjustedfuriganaSpacingRatio
+                                        },
+                                ) {
+                                    val adjustedLetterSpacing =
+                                        if (fontSize.isSpecified) {
+                                            (-fontSize.value * furiganaLetterSpacingReduceRatio).sp
+                                        } else {
+                                            (-style.fontSize.value * furiganaLetterSpacingReduceRatio).sp
+                                        }
+
+                                    BasicText(
+                                        modifier = Modifier.wrapContentWidth(unbounded = true),
+                                        text = reading,
+                                        style =
+                                            style.copy(
+                                                fontSize = readingFontSize,
+                                                letterSpacing = adjustedLetterSpacing,
+                                            ),
+                                    )
                                 }
-                            ) {
-                                val adjustedLetterSpacing = if (fontSize.isSpecified) {
-                                    (-fontSize.value * furiganaLetterSpacingReduceRatio).sp
-                                } else {
-                                    (-style.fontSize.value * furiganaLetterSpacingReduceRatio).sp
-                                }
-
-                                BasicText(
-                                    modifier = Modifier.wrapContentWidth(unbounded = true),
-                                    text = reading,
-                                    style = style.copy(
-                                        fontSize = readingFontSize,
-                                        letterSpacing = adjustedLetterSpacing,
-                                    ),
-                                )
                             }
                         }
-                    }
-                },
-            )
+                    },
+                )
         }
     } to inlineContent
 }
@@ -280,17 +287,18 @@ private fun adjustedLineHeight(
     lineHeight: TextUnit,
     fontSize: TextUnit,
     style: TextStyle,
-    addRatio: Float = 0.6f
-): TextUnit = when {
-    lineHeight.isSpecified && fontSize.isSpecified ->
-        (lineHeight.value + style.fontSize.value * addRatio).sp
+    addRatio: Float = 0.6f,
+): TextUnit =
+    when {
+        lineHeight.isSpecified && fontSize.isSpecified ->
+            (lineHeight.value + style.fontSize.value * addRatio).sp
 
-    lineHeight.isSpecified ->
-        (lineHeight.value + style.fontSize.value * addRatio).sp
+        lineHeight.isSpecified ->
+            (lineHeight.value + style.fontSize.value * addRatio).sp
 
-    fontSize.isSpecified ->
-        (style.lineHeight.value + fontSize.value * addRatio).sp
+        fontSize.isSpecified ->
+            (style.lineHeight.value + fontSize.value * addRatio).sp
 
-    else ->
-        (style.lineHeight.value + style.fontSize.value * addRatio).sp
-}
+        else ->
+            (style.lineHeight.value + style.fontSize.value * addRatio).sp
+    }

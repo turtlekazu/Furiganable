@@ -21,9 +21,10 @@ fun App() {
     MaterialTheme {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
         ) {
             val text =
                 "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。[複数行[ふくすうぎょう]]にも[対応[たいおう]]していることを[検証[けんしょう]]するために[長[なが]]くしています。"

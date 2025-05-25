@@ -45,13 +45,14 @@ fun TextWithReadingM2(
 ) {
     val localContentColor = LocalContentColor.current
     val localContentAlpha = LocalContentAlpha.current
-    val overrideColorOrUnspecified: Color = if (color.isSpecified) {
-        color
-    } else if (style.color.isSpecified) {
-        style.color
-    } else {
-        localContentColor.copy(localContentAlpha)
-    }
+    val overrideColorOrUnspecified: Color =
+        if (color.isSpecified) {
+            color
+        } else if (style.color.isSpecified) {
+            style.color
+        } else {
+            localContentColor.copy(localContentAlpha)
+        }
 
     TextWithReading(
         text = text,

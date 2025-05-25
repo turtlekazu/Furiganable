@@ -47,12 +47,12 @@ actual fun TextSpacingRemoved(
             fontFamily = fontFamily,
             textDecoration = textDecoration,
             fontStyle = fontStyle,
-            letterSpacing = letterSpacing
+            letterSpacing = letterSpacing,
         ),
         onTextLayout,
         overflow,
         softWrap,
         maxLines,
-        minLines
+        minLines,
     )
 }
