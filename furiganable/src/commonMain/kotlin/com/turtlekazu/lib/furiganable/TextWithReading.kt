@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 
 /**
+ * The core composable function for displaying text with furigana (reading).
+ *
  * @param lineHeightAddRatio: Ratio of extra height added to the line height,
  * applied only when furigana is shown.
  * @param furiganaFontSizeRatio: Ratio of the font size of the furigana to the main text.
@@ -196,9 +198,10 @@ private fun calculateAnnotatedString(
                         contentAlignment = Alignment.TopCenter,
                         modifier = Modifier.fillMaxSize(),
                     ) {
-                        TextSpacingRemovedM2(
+                        TextSpacingRemoved(
                             modifier = Modifier.wrapContentWidth(unbounded = true),
                             text = text,
+                            color = mergedStyle.color,
                             style = mergedStyle,
                         )
 
