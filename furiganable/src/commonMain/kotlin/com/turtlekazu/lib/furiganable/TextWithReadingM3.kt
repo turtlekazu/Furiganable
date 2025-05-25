@@ -1,9 +1,11 @@
 package com.turtlekazu.lib.furiganable
 
-import androidx.compose.material3.Text
+import androidx.compose.material.LocalTextStyle
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -32,33 +34,37 @@ fun TextWithReadingM3(
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
-    style: TextStyle = androidx.compose.material3.LocalTextStyle.current,
+    style: TextStyle = LocalTextStyle.current,
     showReadings: Boolean = true,
+    lineHeightAddRatio: Float = 0.5f,
+    furiganaFontSizeRatio: Float = 0.5f,
+    furiganaSpacingRatio: Float = 0.1f,
+    furiganaLetterSpacingReduceRatio: Float = 0.05f,
 ) {
-    if (text.hasReadings() && showReadings) {
-        Text(
-            text = text,
-            modifier = modifier,
-        )
-    } else {
-        Text(
-            text = text,
-            modifier = modifier,
-            color = color,
-            fontSize = fontSize,
-            fontStyle = fontStyle,
-            fontWeight = fontWeight,
-            fontFamily = fontFamily,
-            letterSpacing = letterSpacing,
-            textDecoration = textDecoration,
-            textAlign = textAlign,
-            lineHeight = lineHeight,
-            overflow = overflow,
-            softWrap = softWrap,
-            maxLines = maxLines,
-            minLines = minLines,
-            onTextLayout = onTextLayout,
-            style = style,
-        )
-    }
+    val textColor = color.takeOrElse { style.color.takeOrElse { LocalContentColor.current } }
+
+    TextWithReading(
+        text = text,
+        style = style,
+        color = textColor,
+        modifier = modifier,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
+        showReadings = showReadings,
+        lineHeightAddRatio = lineHeightAddRatio,
+        furiganaFontSizeRatio = furiganaFontSizeRatio,
+        furiganaSpacingRatio = furiganaSpacingRatio,
+        furiganaLetterSpacingReduceRatio = furiganaLetterSpacingReduceRatio,
+    )
 }
