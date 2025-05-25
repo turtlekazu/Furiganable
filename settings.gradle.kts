@@ -1,4 +1,4 @@
-rootProject.name = "furiganable-root"
+rootProject.name = "furiganable"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
