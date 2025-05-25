@@ -1,4 +1,4 @@
-package com.turtlekazu.furiganable
+package com.turtlekazu.furiganable.compose.core
 
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable

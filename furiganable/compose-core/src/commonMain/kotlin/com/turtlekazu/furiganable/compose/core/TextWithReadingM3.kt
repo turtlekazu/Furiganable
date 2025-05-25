@@ -1,12 +1,11 @@
-package com.turtlekazu.furiganable
+package com.turtlekazu.furiganable.compose.core
 
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.isSpecified
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -18,7 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 
 @Composable
-fun TextWithReadingM2(
+fun TextWithReadingM3(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -42,20 +41,12 @@ fun TextWithReadingM2(
     furiganaSpacingRatio: Float = 0.1f,
     furiganaLetterSpacingReduceRatio: Float = 0.05f,
 ) {
-    val localContentColor = LocalContentColor.current
-    val localContentAlpha = LocalContentAlpha.current
-    val overrideColorOrUnspecified: Color = if (color.isSpecified) {
-        color
-    } else if (style.color.isSpecified) {
-        style.color
-    } else {
-        localContentColor.copy(localContentAlpha)
-    }
+    val textColor = color.takeOrElse { style.color.takeOrElse { LocalContentColor.current } }
 
     TextWithReading(
         text = text,
         style = style,
-        color = overrideColorOrUnspecified,
+        color = textColor,
         modifier = modifier,
         fontSize = fontSize,
         fontStyle = fontStyle,

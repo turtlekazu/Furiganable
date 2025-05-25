@@ -1,4 +1,4 @@
-package com.turtlekazu.furiganable
+package com.turtlekazu.furiganable.compose.core
 
 fun String.hasReadings(): Boolean {
     return this.contains("[") && this.contains("]]")

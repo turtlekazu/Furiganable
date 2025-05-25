@@ -1,4 +1,4 @@
-package com.turtlekazu.furiganable
+package com.turtlekazu.furiganable.compose.core
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

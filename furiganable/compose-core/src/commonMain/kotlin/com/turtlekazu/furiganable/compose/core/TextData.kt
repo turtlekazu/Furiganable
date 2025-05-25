@@ -1,4 +1,4 @@
-package com.turtlekazu.furiganable
+package com.turtlekazu.furiganable.compose.core
 
 data class TextData(
     val text: String,
