@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
@@ -98,6 +99,10 @@ fun TextWithReading(
     furiganaSpacingRatio: Float = 0.1f,
     furiganaLetterSpacingReduceRatio: Float = 0.05f,
 ) {
+    val textColor = color.takeOrElse {
+        style.color.takeOrElse { Color.Black }
+    }
+
     if (text.hasReadings() && showReadings) {
 
         val (textContent, inlineContent) =
@@ -105,7 +110,7 @@ fun TextWithReading(
                 calculateAnnotatedString(
                     textDataList = text.toTextData(),
                     showReadings = showReadings,
-                    color = color,
+                    color = textColor,
                     fontSize = fontSize,
                     fontStyle = fontStyle,
                     fontWeight = fontWeight,
@@ -132,7 +137,7 @@ fun TextWithReading(
             text = textContent,
             modifier = modifier,
             style = style.merge(
-                color = color,
+                color = textColor,
                 fontSize = fontSize,
                 fontWeight = fontWeight,
                 textAlign = textAlign ?: TextAlign.Unspecified,
@@ -154,7 +159,7 @@ fun TextWithReading(
             text,
             modifier,
             style.merge(
-                color = color,
+                color = textColor,
                 fontSize = fontSize,
                 fontWeight = fontWeight,
                 textAlign = textAlign ?: TextAlign.Unspecified,
