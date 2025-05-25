@@ -29,4 +29,4 @@ dependencyResolutionManagement {
 }
 
 include(":demoApp:composeApp")
-include(":furiganable:core")
+include(":furiganable:compose-core")
