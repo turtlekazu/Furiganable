@@ -28,7 +28,7 @@ fun App() {
             val text =
                 "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。[複数行[ふくすうぎょう]]にも[対応[たいおう]]していることを[検証[けんしょう]]するために[長[なが]]くしています。"
             val textAlt =
-                "This is a test string. It is long to verify that it supports multiple lines."
+                "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。"
             Column(
                 Modifier
                     .padding(top = 10.dp)
@@ -38,11 +38,6 @@ fun App() {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 TextWithReadingM2(
-                    text,
-                    style = MaterialTheme.typography.h3,
-                )
-
-                TextWithReadingM2(
                     textAlt,
                     style = MaterialTheme.typography.h3,
                 )
@@ -53,17 +48,7 @@ fun App() {
                 )
 
                 TextWithReadingM2(
-                    textAlt,
-                    style = MaterialTheme.typography.h4,
-                )
-
-                TextWithReadingM2(
                     text,
-                    style = MaterialTheme.typography.h5,
-                )
-
-                TextWithReadingM2(
-                    textAlt,
                     style = MaterialTheme.typography.h5,
                 )
 
@@ -73,27 +58,12 @@ fun App() {
                 )
 
                 TextWithReadingM2(
-                    textAlt,
-                    style = MaterialTheme.typography.h6,
-                )
-
-                TextWithReadingM2(
                     text,
                     style = MaterialTheme.typography.body1,
                 )
 
                 TextWithReadingM2(
-                    textAlt,
-                    style = MaterialTheme.typography.body1,
-                )
-
-                TextWithReadingM2(
                     text,
-                    style = MaterialTheme.typography.subtitle1,
-                )
-
-                TextWithReadingM2(
-                    textAlt,
                     style = MaterialTheme.typography.subtitle1,
                 )
             }
