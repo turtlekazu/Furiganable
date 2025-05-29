@@ -1,6 +1,6 @@
 # Furiganable
 
-Furiganable is a simple library that allows you to add furigana (ruby) to Japanese text. It is designed to be easy to use and flexible.
+Furiganable is a simple library that allows you to add furigana (reading) to Japanese text. It is designed to be easy to use and flexible.
 
 The latest demo app APK can be found in the [releases](https://github.com/turtlekazu/Furiganable/releases) section under the "Assets" section of the latest release.
 
@@ -26,7 +26,7 @@ furiganable = "0.0.0"
 
 [libraries]
 #...
-furiganable = { module = "com.turtlekazu.lib:furiganable", version.ref = "furiganable" }
+furiganable = { module = "com.turtlekazu.furiganable:compose-m3", version.ref = "furiganable" }
 ```
 
 or
@@ -34,7 +34,7 @@ or
 ```toml
 [libraries]
 #...
-furiganable = { module = "com.turtlekazu.lib:furiganable", version = "0.0.0" }
+furiganable = { module = "com.turtlekazu.furiganable:compose-m3", version = "0.0.0" }
 ```
 
 then
@@ -54,7 +54,7 @@ If you're using Gradle instead, add the following to your `build.gradle` file:
 
 ```kotlin
 dependencies {
-    implementation("com.turtlekazu.lib:furiganable:0.0.0")
+    implementation("com.turtlekazu.furiganable:compose-m3:0.0.0")
 }
 ```
 
@@ -62,11 +62,14 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation 'com.turtlekazu.lib:furiganable:0.0.0'
+    implementation 'com.turtlekazu.furiganable:compose-m3:0.0.0'
 }
 ```
 
 ## Add component to your composable function
+
+The format to add furigana is like, `[漢字[かんじ]]`.
+To recognize the start and end positions of kanji, outer brackets are required.
 
 ### Before
 ```kotlin
@@ -119,7 +122,7 @@ See [demo app code](demoApp/composeApp/src/commonMain/kotlin/com/turtlekazu/furi
 
 # License
 
-Copyright 2025 Kazuhiro ISHIBASHI
+Copyright 2025 turtlekazu
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
