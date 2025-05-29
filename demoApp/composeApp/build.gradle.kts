@@ -42,6 +42,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(project(":furiganable:compose-m2"))
+            implementation(project(":furiganable:compose-m3"))
         }
     }
 }

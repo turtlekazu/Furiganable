@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.turtlekazu.furiganable.compose.m2.TextWithReadingM2
+import com.turtlekazu.furiganable.compose.m3.TextWithReadingM3
 
 @Composable
 fun App() {
@@ -27,9 +28,18 @@ fun App() {
                     .verticalScroll(rememberScrollState()),
         ) {
             val text =
-                "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。[複数行[ふくすうぎょう]]にも[対応[たいおう]]していることを[検証[けんしょう]]するために[長[なが]]くしています。"
+                "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。[複数行[ふくすうぎょう]]" +
+                        "にも[対応[たいおう]]していることを[検証[けんしょう]]するために[長[なが]]くしています。"
             val textAlt =
                 "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。"
+            val stylesList = listOf(
+                MaterialTheme.typography.h4,
+                MaterialTheme.typography.h5,
+                MaterialTheme.typography.h6,
+                MaterialTheme.typography.body1,
+                MaterialTheme.typography.subtitle1,
+            )
+
             Column(
                 Modifier
                     .padding(top = 10.dp)
@@ -39,34 +49,40 @@ fun App() {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 TextWithReadingM2(
+                    text = "Compose Material 2",
+                    style = MaterialTheme.typography.h4,
+                    modifier = Modifier.padding(vertical = 30.dp),
+                )
+
+                TextWithReadingM2(
                     textAlt,
                     style = MaterialTheme.typography.h3,
                 )
 
-                TextWithReadingM2(
-                    text,
+                stylesList.forEach { style ->
+                    TextWithReadingM2(
+                        text = text,
+                        style = style,
+                    )
+                }
+
+                TextWithReadingM3(
+                    text = "Compose Material 3",
                     style = MaterialTheme.typography.h4,
+                    modifier = Modifier.padding(vertical = 30.dp),
                 )
 
-                TextWithReadingM2(
-                    text,
-                    style = MaterialTheme.typography.h5,
+                TextWithReadingM3(
+                    textAlt,
+                    style = MaterialTheme.typography.h3,
                 )
 
-                TextWithReadingM2(
-                    text,
-                    style = MaterialTheme.typography.h6,
-                )
-
-                TextWithReadingM2(
-                    text,
-                    style = MaterialTheme.typography.body1,
-                )
-
-                TextWithReadingM2(
-                    text,
-                    style = MaterialTheme.typography.subtitle1,
-                )
+                stylesList.forEach { style ->
+                    TextWithReadingM3(
+                        text = text,
+                        style = style,
+                    )
+                }
             }
         }
     }
