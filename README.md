@@ -11,6 +11,27 @@ This library is heavily inspired by the [android-compose-furigana](https://githu
 - Supports Compose Multiplatform (Android, iOS)
 - Supports Localization
 
+# Images
+
+<details>
+    <summary>Material 2</summary>
+
+ Android (> 28) | Android (<= 28) | iOS 18 
+ --- | --- | ---
+ <img src="https://github.com/user-attachments/assets/2cb83b2d-51c9-4c82-a269-be3ee04517e7" width="320px"> | <img src="https://github.com/user-attachments/assets/b6a61b77-e397-422f-9c41-f00a2de8ef83" width="320px"> | <img src="https://github.com/user-attachments/assets/4c464e21-3571-49e4-bcb6-beab767bc8cf" width="320px">
+    
+</details>
+
+<details open>
+    <summary>Material 3</summary>
+
+ Android (> 28) | Android (<= 28) | iOS 18 
+ --- | --- | ---
+ <img src="https://github.com/user-attachments/assets/9d1604dd-903f-455d-8861-1b60f84aeb38" width="320px"> | <img src="https://github.com/user-attachments/assets/85c56c90-1e88-4576-9433-8d2d529e50d7" width="320px"> | <img src="https://github.com/user-attachments/assets/e6b293c9-c666-4e37-ac3d-acac25de910f" width="320px">
+    
+</details>
+
+
 # Usage
 
 ## Add dependency on this library
