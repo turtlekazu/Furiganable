@@ -8,8 +8,9 @@ This library is heavily inspired by the [android-compose-furigana](https://githu
 
 # Features
 
-- Supports Compose Multiplatform (Android, iOS)
-- Supports both Material 2 / Material 3 libraries
+- Compatible with Compose Multiplatform (Android, iOS)
+- Compatible with both Material 2 and Material 3 libraries
+- Easily add furigana by writing text in a simple predefined format
 - Supports Localization
 
 # Variations
@@ -54,7 +55,7 @@ If you're using Version Catalog, add the following to your `libs.versions.toml` 
 ```toml
 [versions]
 #...
-furiganable = "0.0.0"
+furiganable = "<latest-version>"
 
 [libraries]
 #...
@@ -66,7 +67,7 @@ or
 ```toml
 [libraries]
 #...
-furiganable = { module = "com.turtlekazu.furiganable:compose-m3", version = "0.0.0" }
+furiganable = { module = "com.turtlekazu.furiganable:compose-m3", version = "<latest-version>" }
 ```
 
 then
@@ -86,7 +87,7 @@ If you're using Gradle instead, add the following to your `build.gradle` file:
 
 ```kotlin
 dependencies {
-    implementation("com.turtlekazu.furiganable:compose-m3:0.0.0")
+    implementation("com.turtlekazu.furiganable:compose-m3:<latest-version>")
 }
 ```
 
@@ -94,7 +95,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation 'com.turtlekazu.furiganable:compose-m3:0.0.0'
+    implementation 'com.turtlekazu.furiganable:compose-m3:<latest-version>'
 }
 ```
 
