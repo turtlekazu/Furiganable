@@ -9,7 +9,19 @@ This library is heavily inspired by the [android-compose-furigana](https://githu
 # Features
 
 - Supports Compose Multiplatform (Android, iOS)
+- Supports both Material 2 / Material 3 libraries
 - Supports Localization
+
+# Variations
+
+There are 3 modules in this library, `compose-core`, `compose-m2`, `compose-m3`.
+
+module |  recommended | description | usecase
+---|---|---|---
+`compose-core` | - | The core module which is not dependent on any material libraries. You need to pass some extra params to the component. | If you don't want to depend on material libraries. 
+`compose-m2` | ⚪︎ | The module for projects using Material 2 library. | If your project depends on Material 2 library. 
+`compose-m3` | ⚪︎ | The module for projects using Material 3 library. | If your project depends on Material 3 library. 
+
 
 # Images
 
@@ -30,7 +42,6 @@ This library is heavily inspired by the [android-compose-furigana](https://githu
  <img src="https://github.com/user-attachments/assets/9d1604dd-903f-455d-8861-1b60f84aeb38" width="320px"> | <img src="https://github.com/user-attachments/assets/85c56c90-1e88-4576-9433-8d2d529e50d7" width="320px"> | <img src="https://github.com/user-attachments/assets/e6b293c9-c666-4e37-ac3d-acac25de910f" width="320px">
     
 </details>
-
 
 # Usage
 
