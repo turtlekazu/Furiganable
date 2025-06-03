@@ -14,13 +14,13 @@ This library is heavily inspired by the [android-compose-furigana](https://githu
 
 # Variations
 
-There are 3 modules in this library, `compose-core`, `compose-m2`, `compose-m3`.
+This library consists of three modules: `compose-core`, `compose-m2`, and `compose-m3`. Including just one of them is sufficient. Both `compose-m2` and `compose-m3` already include `compose-core`.
 
-module |  recommended | description | usecase
+Module | Recommended | Description | Use Case
 ---|---|---|---
-`compose-core` | - | The core module which is not dependent on any material libraries. You need to pass some extra params to the component. | If you don't want to depend on material libraries. 
-`compose-m2` | ⚪︎ | The module for projects using Material 2 library. | If your project depends on Material 2 library. 
-`compose-m3` | ⚪︎ | The module for projects using Material 3 library. | If your project depends on Material 3 library. 
+`compose-core` | - | A minimal core module with no dependency on Material libraries. Requires passing additional parameters to components. | Ideal for projects that avoid using Material libraries.
+`compose-m2` | ✅ | Designed for projects using the Material 2 library. | Use if your project relies on Material 2.
+`compose-m3` | ✅ | Designed for projects using the Material 3 library. | Use if your project relies on Material 3.
 
 
 # Images
