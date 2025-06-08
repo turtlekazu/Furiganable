@@ -9,4 +9,5 @@ plugins {
     alias(libs.plugins.mavenPublish) apply false
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
+    alias(libs.plugins.dokka) apply false
 }
