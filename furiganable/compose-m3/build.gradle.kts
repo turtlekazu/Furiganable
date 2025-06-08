@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.mavenPublish)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.dokka)
 }
 
 kotlin {

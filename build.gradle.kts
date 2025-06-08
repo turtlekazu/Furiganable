@@ -11,3 +11,7 @@ plugins {
     alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
     alias(libs.plugins.dokka) apply false
 }
+
+subprojects {
+    apply(plugin = "org.jetbrains.dokka")
+}
