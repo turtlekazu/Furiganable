@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.mavenPublish)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.dokka)
 }
 
 kotlin {
@@ -100,5 +101,17 @@ kotlin {
                 // KMP dependencies declared in commonMain.
             }
         }
+    }
+}
+
+dokka {
+    moduleName.set(project.name)
+
+    dokkaSourceSets.commonMain {
+        enableAndroidDocumentationLink.set(true)
+    }
+
+    pluginsConfiguration.html {
+        moduleVersion.set(rootProject.properties["VERSION_NAME"].toString())
     }
 }

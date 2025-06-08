@@ -9,11 +9,25 @@ plugins {
     alias(libs.plugins.mavenPublish) apply false
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
-    alias(libs.plugins.dokka) apply false
+    alias(libs.plugins.dokka)
 }
 
-subprojects {
-    if (project.path != ":demoApp") {
-        plugins.apply("org.jetbrains.dokka")
+dokka {
+    moduleName.set("furiganable")          // トップのタイトル
+    dokkaPublications.html {
+        // docs/ に直接吐き出す
+        outputDirectory.set(rootDir.resolve("docs"))
     }
+
+    // HTML プラグインのパラメータ
+    pluginsConfiguration.html {
+        // フッターなどで <@version/> が展開される
+        moduleVersion.set(rootProject.properties["VERSION_NAME"].toString())
+    }
+}
+
+dependencies {
+    dokka(project(":furiganable:compose-core"))
+    dokka(project(":furiganable:compose-m2"))
+    dokka(project(":furiganable:compose-m3"))
 }
