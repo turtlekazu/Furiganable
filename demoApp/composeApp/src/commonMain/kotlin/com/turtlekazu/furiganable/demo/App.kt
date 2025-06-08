@@ -29,16 +29,17 @@ fun App() {
         ) {
             val text =
                 "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。[複数行[ふくすうぎょう]]" +
-                        "にも[対応[たいおう]]していることを[検証[けんしょう]]するために[長[なが]]くしています。"
+                    "にも[対応[たいおう]]していることを[検証[けんしょう]]するために[長[なが]]くしています。"
             val textAlt =
                 "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。"
-            val stylesList = listOf(
-                MaterialTheme.typography.h4,
-                MaterialTheme.typography.h5,
-                MaterialTheme.typography.h6,
-                MaterialTheme.typography.body1,
-                MaterialTheme.typography.subtitle1,
-            )
+            val stylesList =
+                listOf(
+                    MaterialTheme.typography.h4,
+                    MaterialTheme.typography.h5,
+                    MaterialTheme.typography.h6,
+                    MaterialTheme.typography.body1,
+                    MaterialTheme.typography.subtitle1,
+                )
 
             Column(
                 Modifier
