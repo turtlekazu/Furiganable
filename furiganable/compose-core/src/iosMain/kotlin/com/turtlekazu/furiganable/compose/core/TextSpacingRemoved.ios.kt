@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 
 @Composable
-actual fun TextSpacingRemoved(
+internal actual fun TextSpacingRemoved(
     text: String,
     color: Color,
     style: TextStyle,

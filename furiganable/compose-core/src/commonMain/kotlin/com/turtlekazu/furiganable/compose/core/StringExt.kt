@@ -1,10 +1,10 @@
 package com.turtlekazu.furiganable.compose.core
 
-fun String.hasReadings(): Boolean {
+internal fun String.hasReadings(): Boolean {
     return this.contains("[") && this.contains("]]")
 }
 
-fun String.toTextData(): List<TextData> {
+internal fun String.toTextData(): List<TextData> {
     val regex = "\\[([^\\[]+?)\\[([^]]+?)]]".toRegex()
     val result = mutableListOf<TextData>()
     var lastIndex = 0

@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
-actual fun TextSpacingRemoved(
+internal actual fun TextSpacingRemoved(
     text: String,
     color: Color,
     style: TextStyle,

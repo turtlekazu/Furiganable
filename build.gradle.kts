@@ -9,4 +9,22 @@ plugins {
     alias(libs.plugins.mavenPublish) apply false
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
+    alias(libs.plugins.dokka)
+}
+
+dokka {
+    moduleName.set("furiganable")
+    dokkaPublications.html {
+        outputDirectory.set(rootDir.resolve("docs"))
+    }
+
+    pluginsConfiguration.html {
+        moduleVersion.set(rootProject.properties["VERSION_NAME"].toString())
+    }
+}
+
+dependencies {
+    dokka(project(":furiganable:compose-core"))
+    dokka(project(":furiganable:compose-m2"))
+    dokka(project(":furiganable:compose-m3"))
 }

@@ -18,9 +18,29 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import com.turtlekazu.furiganable.compose.core.TextWithReading
 
+/**
+ * Material2-compatible variant of [TextWithReading].
+ *
+ * Resolves the [color] parameter according to Material2 conventions:
+ * it uses [color] if explicitly set, otherwise falls back to [style.color],
+ * and finally to [LocalContentColor] with [LocalContentAlpha] if neither are specified.
+ *
+ * Intended for use with [androidx.compose.material.MaterialTheme].
+ * This ensures consistency with Material2's text color and content alpha behavior.
+ *
+ * This function supports rendering Japanese text with furigana (phonetic readings) above kanji,
+ * using inline markup such as `[漢字[かんじ]]` to denote readings.
+ *
+ * For detailed control over furigana appearance and layout behavior,
+ * see the base implementation in [TextWithReading].
+ *
+ * @see TextWithReading
+ * @see androidx.compose.material.Text
+ * @see androidx.compose.material.MaterialTheme
+ */
 @Composable
 fun TextWithReadingM2(
-    text: String,
+    formattedText: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
@@ -55,7 +75,7 @@ fun TextWithReadingM2(
         }
 
     TextWithReading(
-        text = text,
+        formattedText = formattedText,
         style = style,
         color = overrideColorOrUnspecified,
         modifier = modifier,
