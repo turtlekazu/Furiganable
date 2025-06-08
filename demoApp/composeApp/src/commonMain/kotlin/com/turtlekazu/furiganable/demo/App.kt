@@ -49,7 +49,7 @@ fun App() {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 TextWithReadingM2(
-                    text = "Compose Material 2",
+                    formattedText = "Compose Material 2",
                     style = MaterialTheme.typography.h4,
                     modifier = Modifier.padding(vertical = 30.dp),
                 )
@@ -61,13 +61,13 @@ fun App() {
 
                 stylesList.forEach { style ->
                     TextWithReadingM2(
-                        text = text,
+                        formattedText = text,
                         style = style,
                     )
                 }
 
                 TextWithReadingM3(
-                    text = "Compose Material 3",
+                    formattedText = "Compose Material 3",
                     style = MaterialTheme.typography.h4,
                     modifier = Modifier.padding(vertical = 30.dp),
                 )
@@ -79,7 +79,7 @@ fun App() {
 
                 stylesList.forEach { style ->
                     TextWithReadingM3(
-                        text = text,
+                        formattedText = text,
                         style = style,
                     )
                 }

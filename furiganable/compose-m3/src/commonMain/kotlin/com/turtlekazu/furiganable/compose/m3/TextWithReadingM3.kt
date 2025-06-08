@@ -39,7 +39,7 @@ import com.turtlekazu.furiganable.compose.core.TextWithReading
  */
 @Composable
 fun TextWithReadingM3(
-    text: String,
+    formattedText: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
@@ -65,7 +65,7 @@ fun TextWithReadingM3(
     val textColor = color.takeOrElse { style.color.takeOrElse { LocalContentColor.current } }
 
     TextWithReading(
-        text = text,
+        formattedText = formattedText,
         style = style,
         color = textColor,
         modifier = modifier,

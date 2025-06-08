@@ -40,7 +40,7 @@ import com.turtlekazu.furiganable.compose.core.TextWithReading
  */
 @Composable
 fun TextWithReadingM2(
-    text: String,
+    formattedText: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
@@ -75,7 +75,7 @@ fun TextWithReadingM2(
         }
 
     TextWithReading(
-        text = text,
+        formattedText = formattedText,
         style = style,
         color = overrideColorOrUnspecified,
         modifier = modifier,

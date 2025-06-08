@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 /**
  * The core composable for displaying text with optional furigana (phonetic readings).
  *
- * This function renders the given [text] along with its readings (if any and if [showReadings] is true),
+ * This function renders the given [formattedText] along with its readings (if any and if [showReadings] is true),
  * positioning the furigana above the corresponding characters. This is especially useful for displaying
  * Japanese kanji with phonetic guides.
  *
@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.sp
  * If you are setting your own [style], consider using [LocalTextStyle] and [TextStyle.copy] to retain
  * theme-based defaults.
  *
- * @param text The text to be displayed. May include furigana data formatted like `[漢字[かんじ]]`.
+ * @param formattedText The text to be displayed. May include furigana data formatted like `[漢字[かんじ]]`.
  * @param showReadings Whether to display the furigana. If false, only the base text is shown.
  * @param lineHeightAddRatio Additional line height added when furigana is shown,
  * expressed as a ratio of the main text’s font size (e.g., 0.5 = +50%).
@@ -68,7 +68,7 @@ import androidx.compose.ui.unit.sp
  */
 @Composable
 fun TextWithReading(
-    text: String,
+    formattedText: String,
     color: Color,
     style: TextStyle,
     modifier: Modifier = Modifier,
@@ -96,11 +96,11 @@ fun TextWithReading(
             style.color.takeOrElse { Color.Black }
         }
 
-    if (text.hasReadings() && showReadings) {
+    if (formattedText.hasReadings() && showReadings) {
         val (textContent, inlineContent) =
-            remember(text) {
+            remember(formattedText) {
                 calculateAnnotatedString(
-                    textDataList = text.toTextData(),
+                    textDataList = formattedText.toTextData(),
                     showReadings = showReadings,
                     color = textColor,
                     fontSize = fontSize,
@@ -150,7 +150,7 @@ fun TextWithReading(
         )
     } else {
         BasicText(
-            text,
+            formattedText,
             modifier,
             style.merge(
                 color = textColor,
