@@ -31,48 +31,40 @@ import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 
 /**
- * The core composable function for displaying text with furigana (reading).
+ * The core composable for displaying text with optional furigana (phonetic readings).
  *
- * @param text the text to be displayed
- * @param color [Color] to apply to the text. If [Color.Unspecified]
- * the text color will be [Color.Black].
- * @param style style configuration for the text such as color, font, line height etc.
- * @param modifier the [Modifier] to be applied to this layout node
- * @param fontSize the size of glyphs to use when painting the text. See [TextStyle.fontSize].
- * @param fontStyle the typeface variant to use when drawing the letters (e.g., italic). See
- *   [TextStyle.fontStyle].
- * @param fontWeight the typeface thickness to use when painting the text (e.g., [FontWeight.Bold]).
- * @param fontFamily the font family to be used when rendering the text. See [TextStyle.fontFamily].
- * @param letterSpacing the amount of space to add between each letter. See
- *   [TextStyle.letterSpacing].
- * @param textDecoration the decorations to paint on the text (e.g., an underline). See
- *   [TextStyle.textDecoration].
- * @param textAlign the alignment of the text within the lines of the paragraph. See
- *   [TextStyle.textAlign].
- * @param lineHeight line height for the [Paragraph] in [TextUnit] unit, e.g. SP or EM. See
- *   [TextStyle.lineHeight].
- * @param overflow how visual overflow should be handled.
- * @param softWrap whether the text should break at soft line breaks. If false, the glyphs in the
- *   text will be positioned as if there was unlimited horizontal space. If [softWrap] is false,
- *   [overflow] and TextAlign may have unexpected effects.
- * @param maxLines An optional maximum number of lines for the text to span, wrapping if necessary.
- *   If the text exceeds the given number of lines, it will be truncated according to [overflow] and
- *   [softWrap]. It is required that 1 <= [minLines] <= [maxLines].
- * @param minLines The minimum height in terms of minimum number of visible lines. It is required
- *   that 1 <= [minLines] <= [maxLines].
- * @param onTextLayout callback that is executed when a new text layout is calculated. A
- *  [TextLayoutResult] object that callback provides contains paragraph information, size of the
- *   text, baselines and other details. The callback can be used to add additional decoration or
- *   functionality to the text. For example, to draw selection around the text.
- * @param showReadings If false, the furigana (reading) will not be shown.
- * @param lineHeightAddRatio Extra line height added when furigana (reading) is shown,
- * expressed as a proportion of the main text’s font size.
- * @param furiganaFontSizeRatio Furigana (reading) font size as a proportion of main text font size.
- * @param furiganaSpacingRatio Spacing between furigana (reading) and main text,
- * expressed as a proportion of the main text font size.
- * @param furiganaLetterSpacingReduceRatio Furigana (reading) letter-spacing reduction
- * as a proportion of main text letter spacing.
- * (Ratio means the proportion of the main text's font size.)
+ * This function renders the given [text] along with its readings (if any and if [showReadings] is true),
+ * positioning the furigana above the corresponding characters. This is especially useful for displaying
+ * Japanese kanji with phonetic guides.
+ *
+ * All standard text styling parameters behave similarly to [androidx.compose.material3.Text].
+ * If you are setting your own [style], consider using [LocalTextStyle] and [TextStyle.copy] to retain
+ * theme-based defaults.
+ *
+ * @param text The text to be displayed. May include furigana data formatted like `[漢字[かんじ]]`.
+ * @param showReadings Whether to display the furigana. If false, only the base text is shown.
+ * @param lineHeightAddRatio Additional line height added when furigana is shown,
+ * expressed as a ratio of the main text’s font size (e.g., 0.5 = +50%).
+ * @param furiganaFontSizeRatio Font size of the furigana, as a ratio of the main text font size.
+ * @param furiganaSpacingRatio Vertical spacing between furigana and base text, as a ratio of font size.
+ * @param furiganaLetterSpacingReduceRatio Letter spacing reduction for furigana, as a ratio of the base letter spacing.
+ *
+ * @param modifier Modifier to apply to the layout.
+ * @param color Text color. If [Color.Unspecified], falls back to [style.color] or [LocalContentColor].
+ * @param style Text style configuration such as font, color, line height, etc.
+ * @param fontSize Font size for the main text.
+ * @param fontStyle Typeface variant to use (e.g., italic).
+ * @param fontWeight Font thickness to use (e.g., [FontWeight.Bold]).
+ * @param fontFamily Font family to use.
+ * @param letterSpacing Space to add between letters.
+ * @param textDecoration Decorations to apply (e.g., underline).
+ * @param textAlign Alignment of text within the paragraph.
+ * @param lineHeight Line height in [TextUnit] (e.g., sp or em).
+ * @param overflow How to handle visual overflow.
+ * @param softWrap Whether to wrap at soft line breaks.
+ * @param maxLines Maximum number of lines to display. Required: 1 <= [minLines] <= [maxLines].
+ * @param minLines Minimum number of visible lines. Required: 1 <= [minLines] <= [maxLines].
+ * @param onTextLayout Callback triggered when a new text layout is calculated.
  */
 @Composable
 fun TextWithReading(
