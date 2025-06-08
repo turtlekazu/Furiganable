@@ -105,13 +105,7 @@ kotlin {
 }
 
 dokka {
-    moduleName.set(project.name)
-
     dokkaSourceSets.commonMain {
         enableAndroidDocumentationLink.set(true)
-    }
-
-    pluginsConfiguration.html {
-        moduleVersion.set(rootProject.properties["VERSION_NAME"].toString())
     }
 }

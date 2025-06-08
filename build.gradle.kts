@@ -13,15 +13,12 @@ plugins {
 }
 
 dokka {
-    moduleName.set("furiganable")          // トップのタイトル
+    moduleName.set("furiganable")
     dokkaPublications.html {
-        // docs/ に直接吐き出す
         outputDirectory.set(rootDir.resolve("docs"))
     }
 
-    // HTML プラグインのパラメータ
     pluginsConfiguration.html {
-        // フッターなどで <@version/> が展開される
         moduleVersion.set(rootProject.properties["VERSION_NAME"].toString())
     }
 }
