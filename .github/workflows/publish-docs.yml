@@ -27,7 +27,7 @@ jobs:
           path: ./docs
 
   deploy:
-    needs: build
+    needs: generate
     permissions:
       contents: read
       pages: write
