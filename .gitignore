@@ -18,3 +18,4 @@ xcuserdata
 **/xcshareddata/IDEWorkspaceChecks.plist
 .kotlin
 .fleet
+/docs/
