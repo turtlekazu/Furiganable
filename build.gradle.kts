@@ -13,5 +13,7 @@ plugins {
 }
 
 subprojects {
-    apply(plugin = "org.jetbrains.dokka")
+    if (project.path != ":demoApp") {
+        plugins.apply("org.jetbrains.dokka")
+    }
 }
