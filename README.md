@@ -1,8 +1,6 @@
 # Furiganable
 
-Furiganable is a simple library that allows you to add furigana (reading) to Japanese text. It is designed to be easy to use and flexible.
-
-The latest demo app APK can be found in the [releases](https://github.com/turtlekazu/Furiganable/releases) section under the "Assets" section of the latest release.
+Furiganable is a simple and flexible library for adding furigana (phonetic readings) to text components. It’s designed to be easy to use.
 
 This library is heavily inspired by the [android-compose-furigana](https://github.com/mainrs/android-compose-furigana/) library.
 
@@ -10,7 +8,7 @@ This library is heavily inspired by the [android-compose-furigana](https://githu
 
 - Compatible with Compose Multiplatform (Android, iOS)
 - Compatible with both Material 2 and Material 3 libraries
-- Easily add furigana by writing text in a simple predefined format
+- Easily add furigana by using a simple predefined format, such as `[漢字[かんじ]]`.
 - Supports Localization
 
 # Variations
@@ -108,7 +106,7 @@ To recognize the start and end positions of kanji, outer brackets are required.
 ```kotlin
 @Composable
 fun SampleComponent() {
-    ...
+    // ...
 
     // I want to add furigana to this Text component
     Text(
@@ -122,7 +120,7 @@ fun SampleComponent() {
 ```kotlin
 @Composable
 fun SampleComponent() {
-    ...
+    // ...
 
     // Replace Text component with TextWithReading component
     TextWithReading(
@@ -133,14 +131,15 @@ fun SampleComponent() {
 
 You can use localized string for text with furigana like below
 
-```strings.xml(ja)
+`strings.xml(ja)`
+```xml
 <string name="sample_text">これは[試験用[しけんよう]]の[文字列[もじれつ]]です。</string>
 ```
 
 ```kotlin
 @Composable
 fun SampleComponent() {
-    ...
+    // ...
 
     // You can use localized string with furigana
     TextWithReading(
@@ -151,7 +150,7 @@ fun SampleComponent() {
 
 # Examples
 
-See [demo app code](demoApp/composeApp/src/commonMain/kotlin/com/turtlekazu/furiganable/demo) for more examples.
+See [demo app code](demoApp/composeApp/src/commonMain/kotlin/com/turtlekazu/furiganable/demoApp) for more examples.
 
 # License
 
