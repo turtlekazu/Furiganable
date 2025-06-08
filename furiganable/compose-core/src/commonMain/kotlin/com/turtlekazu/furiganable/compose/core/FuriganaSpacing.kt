@@ -1,3 +1,3 @@
 package com.turtlekazu.furiganable.compose.core
 
-expect fun getFuriganaSpacingCompensation(): Float
+internal expect fun getFuriganaSpacingCompensation(): Float
