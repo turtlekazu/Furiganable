@@ -16,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.turtlekazu.furiganable.compose.m2.TextWithReadingM2
 import com.turtlekazu.furiganable.compose.m3.TextWithReadingM3
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
+@Preview
 fun App() {
     MaterialTheme {
         Box(
