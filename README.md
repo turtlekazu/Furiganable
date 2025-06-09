@@ -59,7 +59,7 @@ If you're using Version Catalog, add the following to your `libs.versions.toml` 
 ```toml
 [versions]
 #...
-furiganable = "$latest-version"
+furiganable = "$version"
 
 [libraries]
 #...
@@ -71,7 +71,7 @@ or
 ```toml
 [libraries]
 #...
-furiganable = { module = "com.turtlekazu.furiganable:compose-m3", version = "$latest-version" }
+furiganable = { module = "com.turtlekazu.furiganable:compose-m3", version = "$version" }
 ```
 
 then
@@ -97,7 +97,7 @@ If you're using Gradle instead, add the following to your `build.gradle` file:
 
 ```kotlin
 dependencies {
-    implementation("com.turtlekazu.furiganable:compose-m3:$latest-version")
+    implementation("com.turtlekazu.furiganable:compose-m3:$version")
 }
 ```
 
@@ -105,7 +105,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation 'com.turtlekazu.furiganable:compose-m3:$latest-version'
+    implementation 'com.turtlekazu.furiganable:compose-m3:$version'
 }
 ```
 
@@ -135,7 +135,7 @@ fun SampleComponent() {
     // ...
 
     // Replace Text component with TextWithReading component
-    TextWithReading(
+    TextWithReadingM3(
         text = "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。",
     )
 }
@@ -155,7 +155,7 @@ fun SampleComponent() {
     // ...
 
     // You can use localized string with furigana
-    TextWithReading(
+    TextWithReadingM3(
         text = stringResource(R.string.sample_text),
     )
 }
