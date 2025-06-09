@@ -42,9 +42,15 @@ Module | Recommended | Description | Use Case
     
 </details>
 
+# API Reference
+
+[API Reference🐢](https://turtlekazu.github.io/Furiganable/)
+
 # Usage
 
 ## Add dependency on this library
+
+<img alt="version badge" src="https://img.shields.io/github/v/release/turtlekazu/Furiganable?filter=*.*.*">
 
 ### Version Catalog
 
@@ -53,7 +59,7 @@ If you're using Version Catalog, add the following to your `libs.versions.toml` 
 ```toml
 [versions]
 #...
-furiganable = "<latest-version>"
+furiganable = "$latest-version"
 
 [libraries]
 #...
@@ -65,10 +71,16 @@ or
 ```toml
 [libraries]
 #...
-furiganable = { module = "com.turtlekazu.furiganable:compose-m3", version = "<latest-version>" }
+furiganable = { module = "com.turtlekazu.furiganable:compose-m3", version = "$latest-version" }
 ```
 
 then
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+```
 
 ```kotlin
 dependencies {
@@ -85,7 +97,7 @@ If you're using Gradle instead, add the following to your `build.gradle` file:
 
 ```kotlin
 dependencies {
-    implementation("com.turtlekazu.furiganable:compose-m3:<latest-version>")
+    implementation("com.turtlekazu.furiganable:compose-m3:$latest-version")
 }
 ```
 
@@ -93,7 +105,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation 'com.turtlekazu.furiganable:compose-m3:<latest-version>'
+    implementation 'com.turtlekazu.furiganable:compose-m3:$latest-version'
 }
 ```
 
@@ -129,13 +141,14 @@ fun SampleComponent() {
 }
 ```
 
-You can use localized string for text with furigana like below
+You can use localized string for text with furigana like below.
 
-`strings.xml(ja)`
+In strings.xml(ja),
 ```xml
 <string name="sample_text">これは[試験用[しけんよう]]の[文字列[もじれつ]]です。</string>
 ```
 
+In your composable function,
 ```kotlin
 @Composable
 fun SampleComponent() {
@@ -150,7 +163,7 @@ fun SampleComponent() {
 
 # Examples
 
-See [demo app code](demoApp/composeApp/src/commonMain/kotlin/com/turtlekazu/furiganable/demoApp) for more examples.
+See [demo app code](demoApp/composeApp/src/commonMain/kotlin/com/turtlekazu/furiganable/demo/App.kt) for more examples.
 
 # License
 
