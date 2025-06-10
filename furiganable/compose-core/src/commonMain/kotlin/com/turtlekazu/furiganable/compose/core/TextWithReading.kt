@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.sp
  * @param furiganaEnabled Whether to enable the furigana. If false, normal text component will be used.
  * @param furiganaFontSize Font size for the furigana text. If unspecified, main text fontSize * 0.5f.
  * @param furiganaLineHeight Line height for the furigana text. If unspecified, uses `furiganaFontSize * 1.2f`.
- * @param furiganaLetterSpacing Letter spacing for the furigana text. If unspecified, uses `-letterSpacing * 0.05f`.
+ * @param furiganaLetterSpacing Letter spacing for the furigana text. If unspecified, uses `-style.fontSize * 0.03f`.
  *
  * @param modifier Modifier to apply to the layout.
  * @param color Text color. If [Color.Unspecified], falls back to [style.color] or [LocalContentColor].
@@ -236,7 +236,7 @@ private fun calculateAnnotatedString(
                                         if (furiganaLetterSpacing.isSpecified) {
                                             furiganaLetterSpacing
                                         } else {
-                                            -style.letterSpacing * 0.05f
+                                            -style.fontSize * 0.03f
                                         }
 
                                     BasicText(

@@ -180,7 +180,7 @@ You can customize the appearance of the furigana text by passing additional para
 
 - **`furiganaLetterSpacing`**:  
   Letter spacing for the furigana text.  
-  Defaults to `-letterSpacing * 0.05f` if unspecified.
+  Defaults to `-style.fontSize * 0.03f` if unspecified.
 
 <image width="720px" src="https://github.com/user-attachments/assets/235b23e7-a250-4b15-bce3-5f95e1b9d8ae"></image>
 
