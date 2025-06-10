@@ -161,15 +161,26 @@ fun SampleComponent() {
 }
 ```
 
-# Advanced Usage
+# Customization
 
-## Customization 
+You can customize the appearance of the furigana text by passing additional parameters to the
+`TextWithReading`, `TextWithReadingM3`, or `TextWithReadingM2` components:
 
-You can customize the appearance of the furigana text by passing additional parameters to the `TextWithReadingM3` or `TextWithReadingM2` components.
+- **`furiganaEnabled`**:  
+  Whether to enable furigana.  
+  If `false`, a normal text component is used.
 
-`furiganaFontSize` - Font size for the furigana text. If unspecified, `style.fontSize * 0.5f`.
-`furiganaLineHeight` - Line height for the furigana text. If unspecified, uses `furiganaFontSize * 1.2f`.
-`furiganaLetterSpacing` - Letter spacing for the furigana text. If unspecified, uses `-letterSpacing * 0.05f`.
+- **`furiganaFontSize`**:  
+  Font size for the furigana text.  
+  Defaults to `style.fontSize * 0.5f` if unspecified.
+
+- **`furiganaLineHeight`**:  
+  Line height for the furigana text.  
+  Defaults to `furiganaFontSize * 1.2f` if unspecified.
+
+- **`furiganaLetterSpacing`**:  
+  Letter spacing for the furigana text.  
+  Defaults to `-letterSpacing * 0.05f` if unspecified.
 
 // TODO: Image
 
