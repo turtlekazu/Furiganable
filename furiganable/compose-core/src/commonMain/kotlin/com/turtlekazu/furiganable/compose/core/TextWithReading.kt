@@ -261,7 +261,7 @@ private fun calculateAnnotatedString(
                                         modifier = Modifier.wrapContentWidth(unbounded = true),
                                         text = reading,
                                         style =
-                                            style.copy(
+                                            mergedStyle.copy(
                                                 fontSize = readingFontSize,
                                                 letterSpacing = adjustedLetterSpacing,
                                             ),
