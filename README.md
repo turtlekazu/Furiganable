@@ -161,6 +161,18 @@ fun SampleComponent() {
 }
 ```
 
+# Advanced Usage
+
+## Customization 
+
+You can customize the appearance of the furigana text by passing additional parameters to the `TextWithReadingM3` or `TextWithReadingM2` components.
+
+`furiganaFontSize` - Font size for the furigana text. If unspecified, `style.fontSize * 0.5f`.
+`furiganaLineHeight` - Line height for the furigana text. If unspecified, uses `furiganaFontSize * 1.2f`.
+`furiganaLetterSpacing` - Letter spacing for the furigana text. If unspecified, uses `-letterSpacing * 0.05f`.
+
+// TODO: Image
+
 # Examples
 
 See [demo app code](demoApp/composeApp/src/commonMain/kotlin/com/turtlekazu/furiganable/demo/App.kt) for more examples.
