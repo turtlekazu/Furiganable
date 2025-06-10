@@ -58,9 +58,9 @@ fun TextWithReadingM2(
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     style: TextStyle = LocalTextStyle.current,
     showReadings: Boolean = true,
-    furiganaFontSize: TextUnit = TextUnit.Unspecified, // if unspecified, use fontSize * 0.5f
-    furiganaLineHeight: TextUnit = TextUnit.Unspecified, // if unspecified, use furiganaFontSize * 1.2f
-    furiganaLetterSpacing: TextUnit = TextUnit.Unspecified, // if unspecified, use -letterSpacing * 0.05f
+    furiganaFontSize: TextUnit = TextUnit.Unspecified,
+    furiganaLineHeight: TextUnit = TextUnit.Unspecified,
+    furiganaLetterSpacing: TextUnit = TextUnit.Unspecified,
 ) {
     val localContentColor = LocalContentColor.current
     val localContentAlpha = LocalContentAlpha.current

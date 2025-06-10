@@ -44,11 +44,9 @@ import androidx.compose.ui.unit.sp
  *
  * @param formattedText The text to be displayed. May include furigana data formatted like `[漢字[かんじ]]`.
  * @param showReadings Whether to display the furigana. If false, only the base text is shown.
- * @param lineHeightAddRatio Additional line height added when furigana is shown,
- * expressed as a ratio of the main text’s font size (e.g., 0.5 = +50%).
- * @param furiganaFontSizeRatio Font size of the furigana, as a ratio of the main text font size.
- * @param furiganaSpacingRatio Vertical spacing between furigana and base text, as a ratio of the main text font size.
- * @param furiganaLetterSpacingReduceRatio Letter spacing reduction for furigana, as a ratio of the main text font size.
+ * @param furiganaFontSize Font size for the furigana text. If unspecified, main text fontSize * 0.5f.
+ * @param furiganaLineHeight Line height for the furigana text. If unspecified, uses `furiganaFontSize * 1.2f`.
+ * @param furiganaLetterSpacing Letter spacing for the furigana text. If unspecified, uses `-letterSpacing * 0.05f`.
  *
  * @param modifier Modifier to apply to the layout.
  * @param color Text color. If [Color.Unspecified], falls back to [style.color] or [LocalContentColor].
@@ -87,9 +85,9 @@ fun TextWithReading(
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     showReadings: Boolean = true,
-    furiganaFontSize: TextUnit = TextUnit.Unspecified, // if unspecified, use fontSize * 0.5f
-    furiganaLineHeight: TextUnit = TextUnit.Unspecified, // if unspecified, use furiganaFontSize * 1.2f
-    furiganaLetterSpacing: TextUnit = TextUnit.Unspecified, // if unspecified, use -letterSpacing * 0.05f
+    furiganaFontSize: TextUnit = TextUnit.Unspecified,
+    furiganaLineHeight: TextUnit = TextUnit.Unspecified,
+    furiganaLetterSpacing: TextUnit = TextUnit.Unspecified,
 ) {
     val textColor =
         color.takeOrElse {
