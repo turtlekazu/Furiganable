@@ -58,10 +58,9 @@ fun TextWithReadingM2(
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     style: TextStyle = LocalTextStyle.current,
     showReadings: Boolean = true,
-    lineHeightAddRatio: Float = 0.5f,
-    furiganaFontSizeRatio: Float = 0.5f,
-    furiganaSpacingRatio: Float = 0.05f,
-    furiganaLetterSpacingReduceRatio: Float = 0.05f,
+    furiganaFontSize: TextUnit = TextUnit.Unspecified, // if unspecified, use fontSize * 0.5f
+    furiganaLineHeight: TextUnit = TextUnit.Unspecified, // if unspecified, use furiganaFontSize * 1.2f
+    furiganaLetterSpacing: TextUnit = TextUnit.Unspecified, // if unspecified, use -letterSpacing * 0.05f
 ) {
     val localContentColor = LocalContentColor.current
     val localContentAlpha = LocalContentAlpha.current
@@ -93,9 +92,8 @@ fun TextWithReadingM2(
         minLines = minLines,
         onTextLayout = onTextLayout,
         showReadings = showReadings,
-        lineHeightAddRatio = lineHeightAddRatio,
-        furiganaFontSizeRatio = furiganaFontSizeRatio,
-        furiganaSpacingRatio = furiganaSpacingRatio,
-        furiganaLetterSpacingReduceRatio = furiganaLetterSpacingReduceRatio,
+        furiganaFontSize = furiganaFontSize,
+        furiganaLineHeight = furiganaLineHeight,
+        furiganaLetterSpacing = furiganaLetterSpacing,
     )
 }
