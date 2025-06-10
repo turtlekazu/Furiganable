@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.sp
 /**
  * The core composable for displaying text with optional furigana (phonetic readings).
  *
- * This function renders the given [formattedText] along with its readings (if any and if [showReadings] is true),
+ * This function renders the given [formattedText] along with its readings (if any and if [furiganaEnabled] is true),
  * positioning the furigana above the corresponding characters. This is especially useful for displaying
  * Japanese kanji with phonetic guides.
  *
@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.sp
  * theme-based defaults.
  *
  * @param formattedText The text to be displayed. May include furigana data formatted like `[漢字[かんじ]]`.
- * @param showReadings Whether to display the furigana. If false, only the base text is shown.
+ * @param furiganaEnabled Whether to enable the furigana. If false, normal text component will be used.
  * @param furiganaFontSize Font size for the furigana text. If unspecified, main text fontSize * 0.5f.
  * @param furiganaLineHeight Line height for the furigana text. If unspecified, uses `furiganaFontSize * 1.2f`.
  * @param furiganaLetterSpacing Letter spacing for the furigana text. If unspecified, uses `-letterSpacing * 0.05f`.
@@ -84,7 +84,7 @@ fun TextWithReading(
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
-    showReadings: Boolean = true,
+    furiganaEnabled: Boolean = true,
     furiganaFontSize: TextUnit = TextUnit.Unspecified,
     furiganaLineHeight: TextUnit = TextUnit.Unspecified,
     furiganaLetterSpacing: TextUnit = TextUnit.Unspecified,
@@ -107,12 +107,12 @@ fun TextWithReading(
             lineHeight = lineHeight,
         )
 
-    if (formattedText.hasReadings() && showReadings) {
+    if (formattedText.hasReadings() && furiganaEnabled) {
         val (textContent, inlineContent) =
             remember(formattedText) {
                 calculateAnnotatedString(
                     textDataList = formattedText.toTextData(),
-                    showReadings = showReadings,
+                    showReadings = furiganaEnabled,
                     style = mergedStyle,
                     furiganaFontSize = furiganaFontSize,
                     furiganaLetterSpacing = furiganaLetterSpacing,
