@@ -60,7 +60,7 @@ fun TextWithReadingM2(
     showReadings: Boolean = true,
     lineHeightAddRatio: Float = 0.5f,
     furiganaFontSizeRatio: Float = 0.5f,
-    furiganaSpacingRatio: Float = 0.1f,
+    furiganaSpacingRatio: Float = 0.05f,
     furiganaLetterSpacingReduceRatio: Float = 0.05f,
 ) {
     val localContentColor = LocalContentColor.current

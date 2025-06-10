@@ -89,7 +89,7 @@ fun TextWithReading(
     showReadings: Boolean = true,
     lineHeightAddRatio: Float = 0.5f,
     furiganaFontSizeRatio: Float = 0.5f,
-    furiganaSpacingRatio: Float = 0.1f,
+    furiganaSpacingRatio: Float = 0.05f,
     furiganaLetterSpacingReduceRatio: Float = 0.05f,
 ) {
     val textColor =
@@ -245,20 +245,20 @@ private fun calculateAnnotatedString(
 
                             if (showReadings) {
                                 val adjustedfuriganaSpacingRatio =
-                                    1 + furiganaSpacingRatio + getFuriganaSpacingCompensation()
+                                    furiganaSpacingRatio + getFuriganaSpacingCompensation()
                                 Box(
                                     modifier =
                                         Modifier.graphicsLayer {
                                             translationY = -0.5f * readingFontSize.toPx() +
-                                                -0.5f * mergedStyle.fontSize.toPx() *
-                                                adjustedfuriganaSpacingRatio
+                                                -0.5f * mergedStyle.fontSize.toPx() +
+                                                -adjustedfuriganaSpacingRatio * mergedStyle.fontSize.toPx()
                                         },
                                 ) {
                                     val adjustedLetterSpacing =
                                         if (fontSize.isSpecified) {
                                             (-fontSize.value * furiganaLetterSpacingReduceRatio).sp
                                         } else {
-                                            (-style.fontSize.value * furiganaLetterSpacingReduceRatio).sp
+                                            (-mergedStyle.fontSize.value * furiganaLetterSpacingReduceRatio).sp
                                         }
 
                                     BasicText(
