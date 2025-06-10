@@ -1,5 +1,6 @@
 package com.turtlekazu.furiganable.compose.core
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -237,6 +238,9 @@ private fun calculateAnnotatedString(
                                 text = text,
                                 color = mergedStyle.color,
                                 style = mergedStyle,
+                                maxLines = 1,
+                                softWrap = false,
+                                overflow = TextOverflow.Visible,
                             )
 
                             if (showReadings) {
@@ -260,6 +264,9 @@ private fun calculateAnnotatedString(
                                     BasicText(
                                         modifier = Modifier.wrapContentWidth(unbounded = true),
                                         text = reading,
+                                        softWrap = false,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Visible,
                                         style =
                                             mergedStyle.copy(
                                                 fontSize = readingFontSize,
