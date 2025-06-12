@@ -130,16 +130,8 @@ fun TextWithReading(
             text = textContent,
             modifier = modifier,
             style =
-                style.merge(
-                    color = textColor,
-                    fontSize = fontSize,
-                    fontWeight = fontWeight,
-                    textAlign = textAlign ?: TextAlign.Unspecified,
+                mergedStyle.merge(
                     lineHeight = totalLineHeight,
-                    fontFamily = fontFamily,
-                    textDecoration = textDecoration,
-                    fontStyle = fontStyle,
-                    letterSpacing = letterSpacing,
                 ),
             onTextLayout = onTextLayout,
             overflow = overflow,
@@ -152,17 +144,7 @@ fun TextWithReading(
         BasicText(
             formattedText,
             modifier,
-            style.merge(
-                color = textColor,
-                fontSize = fontSize,
-                fontWeight = fontWeight,
-                textAlign = textAlign ?: TextAlign.Unspecified,
-                lineHeight = lineHeight,
-                fontFamily = fontFamily,
-                textDecoration = textDecoration,
-                fontStyle = fontStyle,
-                letterSpacing = letterSpacing,
-            ),
+            mergedStyle,
             onTextLayout,
             overflow,
             softWrap,
