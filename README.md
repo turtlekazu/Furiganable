@@ -135,7 +135,7 @@ fun SampleComponent() {
     // ...
 
     // Replace Text component with TextWithReading component
-    TextWithReadingM3(
+    TextWithReading(
         text = "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。",
     )
 }
@@ -155,7 +155,7 @@ fun SampleComponent() {
     // ...
 
     // You can use localized string with furigana
-    TextWithReadingM3(
+    TextWithReading(
         text = stringResource(R.string.sample_text),
     )
 }
@@ -164,15 +164,19 @@ fun SampleComponent() {
 # Customization
 
 You can customize the appearance of the furigana text by passing additional parameters to the
-`TextWithReading`, `TextWithReadingM3`, or `TextWithReadingM2` components:
+`TextWithReadingCore`, `TextWithReading`(m2), or `TextWithReading`(m3) components:
 
 - **`furiganaEnabled`**:  
   Whether to enable furigana.  
   If `false`, a normal text component is used.
 
+- **`furiganaGap`**:  
+  Space between the main text and the furigana.  
+  Defaults to `style.fontSize * 0.03f` if unspecified.
+
 - **`furiganaFontSize`**:  
   Font size for the furigana text.  
-  Defaults to `style.fontSize * 0.5f` if unspecified.
+  Defaults to `style.fontSize * 0.45f` if unspecified.
 
 - **`furiganaLineHeight`**:  
   Line height for the furigana text.  
@@ -182,7 +186,7 @@ You can customize the appearance of the furigana text by passing additional para
   Letter spacing for the furigana text.  
   Defaults to `-style.fontSize * 0.03f` if unspecified.
 
-<image width="720px" src="https://github.com/user-attachments/assets/235b23e7-a250-4b15-bce3-5f95e1b9d8ae"></image>
+<image width="720px" src="https://github.com/user-attachments/assets/00986f43-ead3-4708-99fe-eb1cf7e59dbd"></image>
 
 
 # Examples
