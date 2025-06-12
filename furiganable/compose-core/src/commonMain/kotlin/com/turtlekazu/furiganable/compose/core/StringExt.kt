@@ -26,6 +26,5 @@ internal fun String.toTextData(): List<TextData> {
         result.add(TextData(this.substring(lastIndex)))
     }
 
-    println("TextData: $result")
     return result
 }
