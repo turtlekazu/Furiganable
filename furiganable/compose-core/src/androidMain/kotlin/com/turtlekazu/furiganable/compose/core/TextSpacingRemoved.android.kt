@@ -92,7 +92,6 @@ internal actual fun TextSpacingRemoved(
 
         val finalLineHeight = when {
             mergedStyle.lineHeight.isSpecified -> mergedStyle.lineHeight
-            style.lineHeight.isSpecified -> style.lineHeight
             else -> DEFAULT_FONT_SIZE.sp * 1.2f
         }
 
@@ -104,7 +103,6 @@ internal actual fun TextSpacingRemoved(
 
         val finalLetterSpacing = when {
             mergedStyle.letterSpacing.isSpecified -> mergedStyle.letterSpacing
-            style.letterSpacing.isSpecified -> style.letterSpacing
             else -> DEFAULT_LETTER_SPACING.sp
         }
 
