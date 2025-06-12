@@ -29,7 +29,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.isSpecified
-import androidx.compose.ui.unit.isUnspecified
 import androidx.compose.ui.unit.sp
 import kotlin.math.max
 
@@ -47,7 +46,7 @@ import kotlin.math.max
  * @param formattedText The text to be displayed. May include furigana data formatted like `[漢字[かんじ]]`.
  * @param furiganaEnabled Whether to enable the furigana. If false, normal text component will be used.
  * @param furiganaGap Space between the main text and the furigana. If unspecified, uses `style.fontSize * 0.03f`.
- * @param furiganaFontSize Font size for the furigana text. If unspecified, `style.fontSize * 0.5f`.
+ * @param furiganaFontSize Font size for the furigana text. If unspecified, `style.fontSize * 0.45f`.
  * @param furiganaLineHeight Line height for the furigana text. If unspecified, uses `furiganaFontSize * 1.2f`.
  * @param furiganaLetterSpacing Letter spacing for the furigana text. If unspecified, uses `-style.fontSize * 0.03f`.
  *
@@ -132,7 +131,7 @@ fun TextWithReadingCore(
             else -resolvedFontSize * 0.03f
 
         val resolvedFuriganaFontSize =
-            if (furiganaFontSize.isSpecified) furiganaFontSize else resolvedFontSize * 0.5f
+            if (furiganaFontSize.isSpecified) furiganaFontSize else resolvedFontSize * 0.45f
 
         val resolvedFuriganaLineHeight =
             if (furiganaLineHeight.isSpecified) furiganaLineHeight
@@ -144,9 +143,17 @@ fun TextWithReadingCore(
                 resolvedFuriganaGap.value
             ).sp
 
-        val resolvedLineHeight =
-            if (mergedStyle.lineHeight.isUnspecified || mergedStyle.lineHeight < minLineHeight)
-                minLineHeight else mergedStyle.lineHeight
+        val resolvedLineHeight = when {
+            mergedStyle.lineHeight.isSpecified -> {
+                if (mergedStyle.lineHeight > minLineHeight) {
+                    mergedStyle.lineHeight
+                } else {
+                    minLineHeight
+                }
+            }
+
+            else -> minLineHeight
+        }
 
         val (textContent, inlineContent) =
             remember(formattedText) {
@@ -256,14 +263,15 @@ private fun calculateAnnotatedString(
                                                 )
                                         },
                                 ) {
-                                    BasicText(
+                                    TextSpacingRemoved(
                                         modifier = Modifier.wrapContentSize(),
                                         text = reading,
                                         softWrap = false,
                                         maxLines = 1,
                                         overflow = TextOverflow.Visible,
+                                        color = style.color,
                                         style =
-                                            style.copy(
+                                            style.merge(
                                                 fontSize = furiganaFontSize,
                                                 letterSpacing = furiganaLetterSpacing,
                                             ),
