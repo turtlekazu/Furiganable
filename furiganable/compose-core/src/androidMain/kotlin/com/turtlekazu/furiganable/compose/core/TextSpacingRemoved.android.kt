@@ -25,6 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.isSpecified
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
@@ -50,21 +52,24 @@ internal actual fun TextSpacingRemoved(
     val context = LocalContext.current
     val density = LocalDensity.current
 
+    val preMergedStyle =
+        style.merge(
+            color = color,
+            fontSize = fontSize,
+            fontStyle = fontStyle,
+            fontWeight = fontWeight,
+            fontFamily = fontFamily,
+            letterSpacing = letterSpacing,
+            textDecoration = textDecoration,
+            textAlign = textAlign ?: TextAlign.Unspecified,
+            lineHeight = lineHeight,
+        )
+
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
         BasicText(
             text,
             modifier,
-            style.merge(
-                color = color,
-                fontSize = fontSize,
-                fontWeight = fontWeight,
-                textAlign = textAlign ?: TextAlign.Unspecified,
-                lineHeight = lineHeight,
-                fontFamily = fontFamily,
-                textDecoration = textDecoration,
-                fontStyle = fontStyle,
-                letterSpacing = letterSpacing,
-            ),
+            preMergedStyle,
             onTextLayout,
             overflow,
             softWrap,
@@ -72,26 +77,36 @@ internal actual fun TextSpacingRemoved(
             minLines,
         )
     } else {
-        val overrideColorOrUnspecified: Color =
+        val finalColor: Color =
             if (color.isSpecified) {
                 color
             } else if (style.color.isSpecified) {
                 style.color
             } else {
-                color
+                DEFAULT_COLOR
             }
 
-        val mergedStyle =
-            style.merge(
-                fontSize = fontSize,
-                fontStyle = fontStyle,
-                fontWeight = fontWeight,
-                fontFamily = fontFamily,
-                letterSpacing = letterSpacing,
-                textDecoration = textDecoration,
-                textAlign = textAlign ?: TextAlign.Unspecified,
-                lineHeight = lineHeight,
-            )
+        val mergedStyle = preMergedStyle.merge(
+            color = finalColor
+        )
+
+        val finalLineHeight = when {
+            mergedStyle.lineHeight.isSpecified -> mergedStyle.lineHeight
+            style.lineHeight.isSpecified -> style.lineHeight
+            else -> DEFAULT_FONT_SIZE.sp * 1.2f
+        }
+
+        val finalFontSize = when {
+            mergedStyle.fontSize.isSpecified -> mergedStyle.fontSize
+            style.fontSize.isSpecified -> style.fontSize
+            else -> DEFAULT_FONT_SIZE.sp
+        }
+
+        val finalLetterSpacing = when {
+            mergedStyle.letterSpacing.isSpecified -> mergedStyle.letterSpacing
+            style.letterSpacing.isSpecified -> style.letterSpacing
+            else -> DEFAULT_LETTER_SPACING.sp
+        }
 
         val resolver: FontFamily.Resolver = LocalFontFamilyResolver.current
         val typeface: Typeface =
@@ -113,10 +128,10 @@ internal actual fun TextSpacingRemoved(
                 }
             },
             update = { textView ->
-                textView.setTextColor(overrideColorOrUnspecified.toArgb())
+                textView.setTextColor(finalColor.toArgb())
                 textView.setTextSize(
                     TypedValue.COMPLEX_UNIT_SP,
-                    mergedStyle.fontSize.value,
+                    finalFontSize.value,
                 )
 
                 fun calcSingleLinePadding(
@@ -132,10 +147,8 @@ internal actual fun TextSpacingRemoved(
                     return topPad to bottomPad
                 }
 
-                val lineHeightPx = mergedStyle.lineHeight.value * density.density
+                val lineHeightPx = finalLineHeight.value * density.density
                 textView.lineHeight = (lineHeightPx).toInt()
-                textView.letterSpacing =
-                    mergedStyle.letterSpacing.value / mergedStyle.fontSize.value
 
                 val (paddingTop, paddingBottom) =
                     calcSingleLinePadding(
@@ -143,6 +156,7 @@ internal actual fun TextSpacingRemoved(
                         lineHeightPx,
                     )
                 textView.setPadding(0, paddingTop, 0, paddingBottom)
+                textView.letterSpacing = finalLetterSpacing.value / finalFontSize.value
 
                 textView.setMaxLines(maxLines)
                 textView.setMinLines(minLines)
