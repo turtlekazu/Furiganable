@@ -69,7 +69,7 @@ import kotlin.math.max
  * @param onTextLayout Callback triggered when a new text layout is calculated.
  */
 @Composable
-fun TextWithReading(
+fun TextWithReadingCore(
     formattedText: String,
     color: Color,
     style: TextStyle,

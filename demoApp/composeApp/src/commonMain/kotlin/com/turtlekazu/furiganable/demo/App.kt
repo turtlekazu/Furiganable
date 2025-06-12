@@ -14,8 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.turtlekazu.furiganable.compose.m2.TextWithReadingM2
-import com.turtlekazu.furiganable.compose.m3.TextWithReadingM3
+import com.turtlekazu.furiganable.compose.m2.TextWithReading
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -51,37 +50,37 @@ fun App() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                TextWithReadingM2(
+                TextWithReading(
                     formattedText = "Compose Material 2",
                     style = MaterialTheme.typography.h4,
                     modifier = Modifier.padding(vertical = 30.dp),
                 )
 
-                TextWithReadingM2(
+                TextWithReading(
                     textAlt,
                     style = MaterialTheme.typography.h3,
                 )
 
                 stylesList.forEach { style ->
-                    TextWithReadingM2(
+                    TextWithReading(
                         formattedText = text,
                         style = style,
                     )
                 }
 
-                TextWithReadingM3(
+                com.turtlekazu.furiganable.compose.m3.TextWithReading(
                     formattedText = "Compose Material 3",
                     style = MaterialTheme.typography.h4,
                     modifier = Modifier.padding(vertical = 30.dp),
                 )
 
-                TextWithReadingM3(
+                com.turtlekazu.furiganable.compose.m3.TextWithReading(
                     textAlt,
                     style = MaterialTheme.typography.h3,
                 )
 
                 stylesList.forEach { style ->
-                    TextWithReadingM3(
+                    com.turtlekazu.furiganable.compose.m3.TextWithReading(
                         formattedText = text,
                         style = style,
                     )

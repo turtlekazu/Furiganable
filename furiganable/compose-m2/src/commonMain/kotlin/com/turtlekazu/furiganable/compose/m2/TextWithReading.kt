@@ -16,10 +16,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import com.turtlekazu.furiganable.compose.core.TextWithReading
+import com.turtlekazu.furiganable.compose.core.TextWithReadingCore
 
 /**
- * Material2-compatible variant of [TextWithReading].
+ * Material2-compatible variant of [TextWithReadingCore].
  *
  * Resolves the [color] parameter according to Material2 conventions:
  * it uses [color] if explicitly set, otherwise falls back to [style.color],
@@ -32,14 +32,14 @@ import com.turtlekazu.furiganable.compose.core.TextWithReading
  * using inline markup such as `[漢字[かんじ]]` to denote readings.
  *
  * For detailed control over furigana appearance and layout behavior,
- * see the base implementation in [TextWithReading].
+ * see the base implementation in [TextWithReadingCore].
  *
- * @see TextWithReading
+ * @see TextWithReadingCore
  * @see androidx.compose.material.Text
  * @see androidx.compose.material.MaterialTheme
  */
 @Composable
-fun TextWithReadingM2(
+fun TextWithReading(
     formattedText: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -74,7 +74,7 @@ fun TextWithReadingM2(
             localContentColor.copy(localContentAlpha)
         }
 
-    TextWithReading(
+    TextWithReadingCore(
         formattedText = formattedText,
         style = style,
         color = overrideColorOrUnspecified,
