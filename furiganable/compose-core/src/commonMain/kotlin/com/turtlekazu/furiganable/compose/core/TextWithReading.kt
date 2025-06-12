@@ -91,7 +91,7 @@ fun TextWithReading(
 ) {
     val textColor =
         color.takeOrElse {
-            style.color.takeOrElse { Color.Black }
+            style.color.takeOrElse { DEFAULT_COLOR }
         }
 
     val mergedStyle =
@@ -282,8 +282,3 @@ private fun calculateLineHeight(
 
     return (baseLineHeight.value + furiganaHeight.value).sp
 }
-
-/**
- * @see androidx.compose.ui.text.SpanStyle
- */
-private const val DEFAULT_FONT_SIZE = 14
