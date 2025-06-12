@@ -19,7 +19,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Generate docs
-        run: ./gradlew dokkaGeneratePublicationHtml
+        run: ./gradlew dokkaGeneratePublicationHtml --no-build-cache
 
       - name: Deploy
         uses: actions/upload-pages-artifact@v3
