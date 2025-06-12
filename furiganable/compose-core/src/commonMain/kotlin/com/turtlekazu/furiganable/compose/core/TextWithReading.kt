@@ -29,7 +29,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.isSpecified
+import androidx.compose.ui.unit.isUnspecified
 import androidx.compose.ui.unit.sp
+import kotlin.math.max
 
 /**
  * The core composable for displaying text with optional furigana (phonetic readings).
@@ -44,7 +46,8 @@ import androidx.compose.ui.unit.sp
  *
  * @param formattedText The text to be displayed. May include furigana data formatted like `[漢字[かんじ]]`.
  * @param furiganaEnabled Whether to enable the furigana. If false, normal text component will be used.
- * @param furiganaFontSize Font size for the furigana text. If unspecified, main text fontSize * 0.5f.
+ * @param furiganaGap Space between the main text and the furigana. If unspecified, uses `style.fontSize * 0.03f`.
+ * @param furiganaFontSize Font size for the furigana text. If unspecified, `style.fontSize * 0.5f`.
  * @param furiganaLineHeight Line height for the furigana text. If unspecified, uses `furiganaFontSize * 1.2f`.
  * @param furiganaLetterSpacing Letter spacing for the furigana text. If unspecified, uses `-style.fontSize * 0.03f`.
  *
@@ -85,6 +88,7 @@ fun TextWithReading(
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     furiganaEnabled: Boolean = true,
+    furiganaGap: TextUnit = TextUnit.Unspecified,
     furiganaFontSize: TextUnit = TextUnit.Unspecified,
     furiganaLineHeight: TextUnit = TextUnit.Unspecified,
     furiganaLetterSpacing: TextUnit = TextUnit.Unspecified,
@@ -108,30 +112,63 @@ fun TextWithReading(
         )
 
     if (formattedText.hasReadings() && furiganaEnabled) {
+        val resolvedFontSize = when {
+            mergedStyle.fontSize.isSpecified -> mergedStyle.fontSize
+            else -> DEFAULT_FONT_SIZE.sp
+        }
+
+        val resolvedLetterSpacing = when {
+            mergedStyle.letterSpacing.isSpecified -> mergedStyle.letterSpacing
+            else -> DEFAULT_LETTER_SPACING.sp
+        }
+
+        val resolvedFuriganaGap = when {
+            furiganaGap.isSpecified -> furiganaGap
+            else -> resolvedFontSize * 0.03f
+        }
+
+        val resolvedFuriganaLetterSpacing =
+            if (furiganaLetterSpacing.isSpecified) furiganaLetterSpacing
+            else -resolvedFontSize * 0.03f
+
+        val resolvedFuriganaFontSize =
+            if (furiganaFontSize.isSpecified) furiganaFontSize else resolvedFontSize * 0.5f
+
+        val resolvedFuriganaLineHeight =
+            if (furiganaLineHeight.isSpecified) furiganaLineHeight
+            else resolvedFuriganaFontSize * 1.2f
+
+        val minLineHeight = (
+            resolvedFontSize.value +
+                max(resolvedFuriganaFontSize.value, resolvedFuriganaLineHeight.value) +
+                resolvedFuriganaGap.value
+            ).sp
+
+        val resolvedLineHeight =
+            if (mergedStyle.lineHeight.isUnspecified || mergedStyle.lineHeight < minLineHeight)
+                minLineHeight else mergedStyle.lineHeight
+
         val (textContent, inlineContent) =
             remember(formattedText) {
                 calculateAnnotatedString(
                     textDataList = formattedText.toTextData(),
                     showReadings = furiganaEnabled,
-                    style = mergedStyle,
-                    furiganaFontSize = furiganaFontSize,
-                    furiganaLetterSpacing = furiganaLetterSpacing,
+                    style = mergedStyle.merge(
+                        fontSize = resolvedFontSize,
+                        letterSpacing = resolvedLetterSpacing,
+                    ),
+                    furiganaGap = resolvedFuriganaGap,
+                    furiganaFontSize = resolvedFuriganaFontSize,
+                    furiganaLetterSpacing = resolvedFuriganaLetterSpacing,
                 )
             }
-
-        val totalLineHeight = calculateLineHeight(
-            lineHeight = lineHeight,
-            style = mergedStyle,
-            furiganaLineHeight = furiganaLineHeight,
-            furiganaFontSize = furiganaFontSize,
-        )
 
         BasicText(
             text = textContent,
             modifier = modifier,
             style =
                 mergedStyle.merge(
-                    lineHeight = totalLineHeight,
+                    lineHeight = resolvedLineHeight,
                 ),
             onTextLayout = onTextLayout,
             overflow = overflow,
@@ -158,6 +195,7 @@ private fun calculateAnnotatedString(
     textDataList: List<TextData>,
     showReadings: Boolean,
     style: TextStyle,
+    furiganaGap: TextUnit,
     furiganaFontSize: TextUnit,
     furiganaLetterSpacing: TextUnit,
 ): Pair<AnnotatedString, Map<String, InlineTextContent>> {
@@ -192,12 +230,6 @@ private fun calculateAnnotatedString(
                             placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
                         ),
                     children = {
-                        val readingFontSize = when {
-                            furiganaFontSize.isSpecified -> furiganaFontSize
-                            style.fontSize.isSpecified -> style.fontSize * 0.5f
-                            else -> DEFAULT_FONT_SIZE.sp * 0.5f
-                        }
-
                         Box(
                             contentAlignment = Alignment.TopCenter,
                             modifier = Modifier.fillMaxSize(),
@@ -212,33 +244,18 @@ private fun calculateAnnotatedString(
                                 overflow = TextOverflow.Visible,
                             )
 
-                            val realLineHeight = when {
-                                style.lineHeight.isSpecified -> style.lineHeight
-                                style.fontSize.isSpecified -> style.fontSize * 1.2f
-                                else -> DEFAULT_FONT_SIZE.sp * 1.2f
-                            }
-
-                            val realFontSize = when {
-                                style.fontSize.isSpecified -> style.fontSize
-                                else -> DEFAULT_FONT_SIZE.sp
-                            }
-
                             if (showReadings) {
                                 Box(
                                     modifier = Modifier
                                         .graphicsLayer {
                                             translationY = -(
-                                                realLineHeight.toPx() * 0.5f +
-                                                    readingFontSize.toPx() * 0.5f +
-                                                    realFontSize.toPx() * getFuriganaSpacingCompensation()
+                                                style.fontSize.toPx() *
+                                                    (0.5f + getFuriganaSpacingCompensation()) +
+                                                    furiganaFontSize.toPx() * 0.5f +
+                                                    furiganaGap.toPx()
                                                 )
                                         },
                                 ) {
-                                    val adjustedLetterSpacing = when {
-                                        furiganaLetterSpacing.isSpecified -> furiganaLetterSpacing
-                                        style.fontSize.isSpecified -> -style.fontSize * 0.03f
-                                        else -> -(DEFAULT_FONT_SIZE.sp) * 0.03f
-                                    }
                                     BasicText(
                                         modifier = Modifier.wrapContentSize(),
                                         text = reading,
@@ -247,8 +264,8 @@ private fun calculateAnnotatedString(
                                         overflow = TextOverflow.Visible,
                                         style =
                                             style.copy(
-                                                fontSize = readingFontSize,
-                                                letterSpacing = adjustedLetterSpacing,
+                                                fontSize = furiganaFontSize,
+                                                letterSpacing = furiganaLetterSpacing,
                                             ),
                                     )
                                 }
@@ -258,27 +275,4 @@ private fun calculateAnnotatedString(
                 )
         }
     } to inlineContent
-}
-
-private fun calculateLineHeight(
-    lineHeight: TextUnit,
-    style: TextStyle,
-    furiganaFontSize: TextUnit,
-    furiganaLineHeight: TextUnit,
-): TextUnit {
-    val baseLineHeight = when {
-        lineHeight.isSpecified -> lineHeight
-        style.lineHeight.isSpecified -> style.lineHeight
-        style.fontSize.isSpecified -> style.fontSize * 1.2f
-        else -> DEFAULT_FONT_SIZE.sp * 1.2f
-    }
-
-    val furiganaHeight = when {
-        furiganaLineHeight.isSpecified -> furiganaLineHeight
-        furiganaFontSize.isSpecified -> furiganaFontSize * 1.2f
-        style.fontSize.isSpecified -> style.fontSize * 0.5f * 1.2f
-        else -> DEFAULT_FONT_SIZE.sp * 0.5f * 1.2f
-    }
-
-    return (baseLineHeight.value + furiganaHeight.value).sp
 }
