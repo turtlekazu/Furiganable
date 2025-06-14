@@ -9,7 +9,7 @@ package com.turtlekazu.furiganable.compose.core
  * @property text The main text to display (e.g., in kanji).
  * @property reading The optional phonetic reading of the text. If `null`, no furigana will be shown.
  */
-internal data class TextData(
+data class TextData(
     val text: String,
     val reading: String? = null,
 )
