@@ -225,7 +225,9 @@ private fun calculateAnnotatedString(
                 DEFAULT_FONT_SIZE.sp
             }
 
-            val width = (text.length.toDouble() + (text.length - 1) * 0.05).em
+            val furiganaWidth = reading.length.toDouble() * furiganaFontSize.value
+            val textWidth = (text.length.toDouble()) * style.fontSize.value
+            val width = max(furiganaWidth, textWidth).sp
 
             appendInlineContent(text, text)
             inlineContent[text] =
