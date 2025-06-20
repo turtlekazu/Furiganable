@@ -266,7 +266,7 @@ private fun calculateAnnotatedString(
                                         },
                                 ) {
                                     TextSpacingRemoved(
-                                        modifier = Modifier.wrapContentSize(),
+                                        modifier = Modifier.wrapContentSize(unbounded = true),
                                         text = reading,
                                         softWrap = false,
                                         maxLines = 1,
