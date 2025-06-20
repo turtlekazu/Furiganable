@@ -181,6 +181,15 @@ internal actual fun TextSpacingRemoved(
                     }
                 textView.typeface = typeface
 
+                mergedStyle.shadow?.let { shadow ->
+                    textView.setShadowLayer(
+                        shadow.blurRadius,
+                        shadow.offset.x,
+                        shadow.offset.y,
+                        shadow.color.toArgb(),
+                    )
+                }
+
                 textView.text = text
             },
         )
