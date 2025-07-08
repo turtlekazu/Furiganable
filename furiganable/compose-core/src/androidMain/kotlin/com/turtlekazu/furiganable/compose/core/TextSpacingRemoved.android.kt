@@ -236,32 +236,46 @@ fun TextView.applyMergedStyle(
 
     val spannable = SpannableString(rawText)
 
-    val span = object : MetricAffectingSpan() {
-        val shiftPx: Int? = mergedStyle.baselineShift?.let { shift ->
-            val factor = when (shift) {
-                BaselineShift.Superscript -> -0.5f
-                BaselineShift.Subscript -> 0.5f
-                else -> shift.multiplier
-            }
-            (textSize * factor).toInt()
-        }
-        val skewX = mergedStyle.textGeometricTransform?.skewX
-        val stroke = (mergedStyle.drawStyle as? Stroke)
+    val commonSpan = object : MetricAffectingSpan() {
+        val skewX  = mergedStyle.textGeometricTransform?.skewX
+        val stroke = mergedStyle.drawStyle as? Stroke
 
         override fun updateDrawState(p: TextPaint) {
-            p.apply {
-                shiftPx?.let { baselineShift += it }
-                skewX?.let { textSkewX = it }
-                stroke?.let {
-                    style = Paint.Style.STROKE
-                    strokeWidth = it.width
-                }
+            skewX?.let { p.textSkewX = it }
+            stroke?.let {
+                p.style       = Paint.Style.STROKE
+                p.strokeWidth = it.width
             }
         }
-
         override fun updateMeasureState(p: TextPaint) = updateDrawState(p)
     }
-    spannable.setSpan(span, 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    spannable.setSpan(commonSpan, 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+    val shiftPx = mergedStyle.baselineShift?.let { shift ->
+        val factor = when (shift) {
+            BaselineShift.Superscript -> -0.5f
+            BaselineShift.Subscript   ->  0.5f
+            else                      ->  shift.multiplier
+        }
+        (textSize * factor).toInt()
+    } ?: 0
+
+    if (shiftPx != 0) {
+        post {
+            val lay = layout ?: return@post
+            val start = lay.getLineStart(lay.lineCount - 1)
+            val end   = lay.getLineEnd(lay.lineCount - 1)
+
+            val shiftSpan = object : MetricAffectingSpan() {
+                override fun updateDrawState(p: TextPaint) { p.baselineShift += shiftPx }
+                override fun updateMeasureState(p: TextPaint) = updateDrawState(p)
+            }
+            spannable.setSpan(shiftSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            text = spannable
+        }
+    } else {
+        text = spannable
+    }
 
     mergedStyle.textIndent?.let { indent ->
         val firstPx = with(density) { indent.firstLine.toPx().toInt() }
