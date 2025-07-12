@@ -270,11 +270,6 @@ fun TextView.applyMergedStyle(
         )
     }
 
-    val lineHeightPx = with(density) { mergedStyle.lineHeight.toPx().roundToInt() }
-
-    val composeSpan = createLineHeightSpan(lineHeightPx, mergedStyle.lineHeightStyle)
-    spannable.setSpan(composeSpan, 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
     val shiftPx = mergedStyle.baselineShift?.let { shift ->
         val factor = when (shift) {
             BaselineShift.Superscript -> -0.5f
@@ -283,31 +278,41 @@ fun TextView.applyMergedStyle(
         }
         (textSize * factor).toInt()
     } ?: 0
-    if (shiftPx != 0) {
-        post {
-            val lay = layout ?: return@post
-            val start = lay.getLineStart(lay.lineCount - 1)
-            val end   = lay.getLineEnd(lay.lineCount - 1)
 
-            val shiftSpan = object : MetricAffectingSpan() {
-                override fun updateDrawState(p: TextPaint) { p.baselineShift += shiftPx }
+    /*------------------ baselineShiftSpan をここで貼る ------------------*/
+    if (shiftPx != 0) {
+        val lastStart = rawText.lastIndexOf('\n').let { if (it == -1) 0 else it + 1 }
+        spannable.setSpan(
+            object : MetricAffectingSpan() {
+                override fun updateDrawState(p: TextPaint)  { p.baselineShift += shiftPx }
                 override fun updateMeasureState(p: TextPaint) = updateDrawState(p)
-            }
-            // MetricAffectingSpan apply only to the last line
-            spannable.setSpan(shiftSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setText(spannable, TextView.BufferType.SPANNABLE)
-        }
-    } else {
-        setText(spannable, TextView.BufferType.SPANNABLE)
+            },
+            lastStart, spannable.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
     }
+    /*-------------------------------------------------------------------*/
+
+    /* ------------ 行高スパンに shiftPx を渡す ------------------------- */
+    val lineHeightPx = with(density) { mergedStyle.lineHeight.toPx().roundToInt() }
+    val composeSpan  = ComposeLineHeightSpan(lineHeightPx, mergedStyle.lineHeightStyle, shiftPx)
+    spannable.setSpan(composeSpan, 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    /*-------------------------------------------------------------------*/
+
+    setText(spannable, TextView.BufferType.SPANNABLE)
 }
 
-fun createLineHeightSpan(lineHeightPx: Int, lineHeightStyle: LineHeightStyle?): LineHeightSpan =
-    ComposeLineHeightSpan(lineHeightPx, lineHeightStyle)
+fun createLineHeightSpan(
+    lineHeightPx: Int,
+    lineHeightStyle: LineHeightStyle?,
+    shiftPx: Int,
+): LineHeightSpan =
+    ComposeLineHeightSpan(lineHeightPx, lineHeightStyle, shiftPx)
 
 class ComposeLineHeightSpan(
     @Px private val lineHeight: Int,
-    private val style: LineHeightStyle? = null
+    private val style: LineHeightStyle? = null,
+    @Px private val shiftPx: Int = 0,
 ) : LineHeightSpan.WithDensity {
 
     /* ─────────── chooseHeight ─────────── */
@@ -358,7 +363,7 @@ class ComposeLineHeightSpan(
 
         println("isFirstLine: $isFirstLine, isLastLine: $isLastLine")
 
-        val finalTop = when (trim) {
+        var finalTop = when (trim) {
             LineHeightStyle.Trim.None,
             LineHeightStyle.Trim.LastLineBottom -> topPad
             LineHeightStyle.Trim.FirstLineTop,
@@ -366,12 +371,18 @@ class ComposeLineHeightSpan(
             else -> if (isFirstLine) 0 else topPad
         }
 
-        val finalBot = when (trim) {
+        var finalBot = when (trim) {
             LineHeightStyle.Trim.None,
             LineHeightStyle.Trim.FirstLineTop -> botPad
             LineHeightStyle.Trim.LastLineBottom,
             LineHeightStyle.Trim.Both         -> if (isLastLine) 0 else botPad
             else -> if (isLastLine) 0 else botPad
+        }
+
+        if (shiftPx < 0 && isFirstLine) {              // 上方向（Superscript）
+            finalTop += -shiftPx        // 上側余白を増やす
+        } else if (shiftPx > 0 && isLastLine) {       // 下方向（Subscript）
+            finalBot += shiftPx         // 下側余白を増やす
         }
 
         println("isFirstLine finalTop: $finalTop, finalBot: $finalBot")
