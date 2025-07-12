@@ -68,10 +68,17 @@ internal class ComposeLineHeightSpan(
             else -> if (isLastLine) 0 else botPad
         }
 
-        if (shiftPx < 0 && isFirstLine) {
-            finalTop += -shiftPx
-        } else if (shiftPx > 0 && isLastLine) {
-            finalBot += shiftPx
+        if (shiftPx < 0) { // Subscript
+            if (isFirstLine) {
+                finalTop += -shiftPx
+            }
+        } else if (shiftPx > 0) { // SuperScript
+            if (isFirstLine) {
+                finalBot += shiftPx
+            } else {
+                finalTop += -shiftPx
+                finalBot += shiftPx
+            }
         }
 
         fm.ascent  = baseFm.ascent  - finalTop

@@ -237,27 +237,12 @@ private fun TextView.applyMergedStyle(
 
     val shiftPx = mergedStyle.baselineShift?.let { shift ->
         val factor = when (shift) {
-            BaselineShift.Superscript -> -0.5f
-            BaselineShift.Subscript -> 0.5f
+            BaselineShift.Superscript -> 0.5f
+            BaselineShift.Subscript -> -0.5f
             else -> shift.multiplier
         }
         (textSize * factor).toInt()
     } ?: 0
-
-    if (shiftPx != 0) {
-        val lastStart = rawText.lastIndexOf('\n').let { if (it == -1) 0 else it + 1 }
-        spannable.setSpan(
-            object : MetricAffectingSpan() {
-                override fun updateDrawState(p: TextPaint) {
-                    p.baselineShift += shiftPx
-                }
-
-                override fun updateMeasureState(p: TextPaint) = updateDrawState(p)
-            },
-            lastStart, spannable.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
 
     val lineHeightPx = with(density) { mergedStyle.lineHeight.toPx().roundToInt() }
     val composeSpan = ComposeLineHeightSpan(lineHeightPx, mergedStyle.lineHeightStyle, shiftPx)
