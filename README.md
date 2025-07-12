@@ -46,6 +46,16 @@ Module | Recommended | Description | Use Case
 
 [API Reference🐢](https://turtlekazu.github.io/Furiganable/)
 
+## Limitations
+
+To force `isFallbackLineSpacing = false` for furigana text, the library swaps Jetpack Compose’s Text composable for an AndroidTextView in certain paths. As a consequence, some Text-related parameters are currently ignored.
+
+Unsupported at the moment
+- TextStyle: `textMotion`
+- Text composable args: `onTextLayout`
+
+If you depend on these APIs, the library may not yet meet your requirements. PRs welcome.
+
 # Usage
 
 ## Add dependency on this library
