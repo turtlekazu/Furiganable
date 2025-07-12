@@ -326,7 +326,7 @@ class ComposeLineHeightSpan(
         val trim  = style?.trim      ?: LineHeightStyle.Trim.Both
 
         val (topPad, botPad) = when (align) {
-            LineHeightStyle.Alignment.Proportional -> proportionalPads(fm, origin)
+            LineHeightStyle.Alignment.Proportional -> proportionalPads(baseFm, origin)
             LineHeightStyle.Alignment.Center       -> centerPads(origin)
             LineHeightStyle.Alignment.Top          -> 0          to (lineHeight - origin)
             LineHeightStyle.Alignment.Bottom       -> (lineHeight - origin) to 0
