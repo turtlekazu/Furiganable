@@ -1,33 +1,50 @@
 package com.turtlekazu.furiganable.compose.core
 
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Build
+import android.text.Layout
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextPaint
+import android.text.style.BackgroundColorSpan
+import android.text.style.LeadingMarginSpan
+import android.text.style.MetricAffectingSpan
 import android.util.TypedValue
+import android.view.View
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFontFamilyResolver
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontSynthesis
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import kotlin.math.roundToInt
 
 @Composable
 internal actual fun TextSpacingRemoved(
@@ -49,9 +66,6 @@ internal actual fun TextSpacingRemoved(
     minLines: Int,
     onTextLayout: ((TextLayoutResult) -> Unit)?,
 ) {
-    val context = LocalContext.current
-    val density = LocalDensity.current
-
     val preMergedStyle =
         style.merge(
             color = color,
@@ -77,121 +91,16 @@ internal actual fun TextSpacingRemoved(
             minLines,
         )
     } else {
-        val finalColor: Color =
-            if (color.isSpecified) {
-                color
-            } else if (style.color.isSpecified) {
-                style.color
-            } else {
-                DEFAULT_COLOR
-            }
-
-        val mergedStyle = preMergedStyle.merge(
-            color = finalColor
-        )
-
-        val finalLineHeight = when {
-            mergedStyle.lineHeight.isSpecified -> mergedStyle.lineHeight
-            else -> DEFAULT_FONT_SIZE.sp * 1.2f
-        }
-
-        val finalFontSize = when {
-            mergedStyle.fontSize.isSpecified -> mergedStyle.fontSize
-            style.fontSize.isSpecified -> style.fontSize
-            else -> DEFAULT_FONT_SIZE.sp
-        }
-
-        val finalLetterSpacing = when {
-            mergedStyle.letterSpacing.isSpecified -> mergedStyle.letterSpacing
-            else -> DEFAULT_LETTER_SPACING.sp
-        }
-
-        val resolver: FontFamily.Resolver = LocalFontFamilyResolver.current
-        val typeface: Typeface =
-            remember(resolver, mergedStyle) {
-                resolver.resolve(
-                    fontFamily = mergedStyle.fontFamily,
-                    fontWeight = mergedStyle.fontWeight ?: FontWeight.Normal,
-                    fontStyle = mergedStyle.fontStyle ?: FontStyle.Normal,
-                    fontSynthesis = mergedStyle.fontSynthesis ?: FontSynthesis.All,
-                )
-            }.value as Typeface
-
-        AndroidView(
+        CustomAndroidViewText(
+            text = text,
             modifier = modifier,
-            factory = {
-                TextView(context).apply {
-                    isFallbackLineSpacing = false
-                    includeFontPadding = false
-                }
-            },
-            update = { textView ->
-                textView.setTextColor(finalColor.toArgb())
-                textView.setTextSize(
-                    TypedValue.COMPLEX_UNIT_SP,
-                    finalFontSize.value,
-                )
-
-                fun calcSingleLinePadding(
-                    paint: TextPaint,
-                    lineHeightPx: Float,
-                ): Pair<Int, Int> {
-                    val fm = paint.fontMetricsInt
-                    val glyphBox = kotlin.math.abs(fm.ascent) + fm.descent
-                    val extra = (lineHeightPx - glyphBox).coerceAtLeast(0f)
-                    val topPad = (extra / 2f).toInt()
-                    val bottomPad = extra.toInt() - topPad
-
-                    return topPad to bottomPad
-                }
-
-                val lineHeightPx = finalLineHeight.value * density.density
-                textView.lineHeight = (lineHeightPx).toInt()
-
-                val (paddingTop, paddingBottom) =
-                    calcSingleLinePadding(
-                        paint = textView.paint,
-                        lineHeightPx,
-                    )
-                textView.setPadding(0, paddingTop, 0, paddingBottom)
-                textView.letterSpacing = finalLetterSpacing.value / finalFontSize.value
-
-                textView.setMaxLines(maxLines)
-                textView.setMinLines(minLines)
-                textView.isSingleLine = !softWrap
-                textView.textAlignment =
-                    when (textAlign) {
-                        TextAlign.Center -> TextView.TEXT_ALIGNMENT_CENTER
-                        TextAlign.End -> TextView.TEXT_ALIGNMENT_TEXT_END
-                        TextAlign.Left -> TextView.TEXT_ALIGNMENT_VIEW_START
-                        TextAlign.Right -> TextView.TEXT_ALIGNMENT_VIEW_END
-                        TextAlign.Justify -> TextView.TEXT_ALIGNMENT_TEXT_START
-                        else -> TextView.TEXT_ALIGNMENT_TEXT_START
-                    }
-                if (textDecoration != null) {
-                    textView.paint.isUnderlineText =
-                        textDecoration.contains(TextDecoration.Underline)
-                    textView.paint.isStrikeThruText =
-                        textDecoration.contains(TextDecoration.LineThrough)
-                }
-                textView.ellipsize =
-                    when (overflow) {
-                        TextOverflow.Ellipsis -> android.text.TextUtils.TruncateAt.END
-                        else -> null
-                    }
-                textView.typeface = typeface
-
-                mergedStyle.shadow?.let { shadow ->
-                    textView.setShadowLayer(
-                        shadow.blurRadius,
-                        shadow.offset.x,
-                        shadow.offset.y,
-                        shadow.color.toArgb(),
-                    )
-                }
-
-                textView.text = text
-            },
+            style = preMergedStyle,
+            onTextLayout = onTextLayout,
+            overflow = overflow,
+            softWrap = softWrap,
+            maxLines = maxLines,
+            minLines = minLines,
+            color = color,
         )
     }
 }
