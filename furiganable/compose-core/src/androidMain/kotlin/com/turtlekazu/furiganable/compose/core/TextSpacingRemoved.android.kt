@@ -224,7 +224,6 @@ internal actual fun TextSpacingRemoved(
     }
 }
 
-
 @RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalTextApi::class)
 fun TextView.applyMergedStyle(
@@ -249,19 +248,16 @@ fun TextView.applyMergedStyle(
         }
         override fun updateMeasureState(p: TextPaint) = updateDrawState(p)
     }
-    // MetricAffectingSpan apply to all lines
     spannable.setSpan(commonSpan, 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
     mergedStyle.textIndent?.let { indent ->
         val firstPx = with(density) { indent.firstLine.toPx().toInt() }
         val restPx = with(density) { indent.restLine.toPx().toInt() }
         val leadingSpan = LeadingMarginSpan.Standard(firstPx, restPx)
-        // LeadingMarginSpan apply to all lines
         spannable.setSpan(leadingSpan, 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
 
     if (mergedStyle.background != Color.Unspecified) {
-        // BackgroundColorSpan apply to all lines
         spannable.setSpan(
             BackgroundColorSpan(mergedStyle.background.toArgb()),
             0,
@@ -279,7 +275,6 @@ fun TextView.applyMergedStyle(
         (textSize * factor).toInt()
     } ?: 0
 
-    /*------------------ baselineShiftSpan をここで貼る ------------------*/
     if (shiftPx != 0) {
         val lastStart = rawText.lastIndexOf('\n').let { if (it == -1) 0 else it + 1 }
         spannable.setSpan(
@@ -291,32 +286,19 @@ fun TextView.applyMergedStyle(
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     }
-    /*-------------------------------------------------------------------*/
 
-    /* ------------ 行高スパンに shiftPx を渡す ------------------------- */
     val lineHeightPx = with(density) { mergedStyle.lineHeight.toPx().roundToInt() }
     val composeSpan  = ComposeLineHeightSpan(lineHeightPx, mergedStyle.lineHeightStyle, shiftPx)
     spannable.setSpan(composeSpan, 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-    /*-------------------------------------------------------------------*/
 
     setText(spannable, TextView.BufferType.SPANNABLE)
 }
-
-fun createLineHeightSpan(
-    lineHeightPx: Int,
-    lineHeightStyle: LineHeightStyle?,
-    shiftPx: Int,
-): LineHeightSpan =
-    ComposeLineHeightSpan(lineHeightPx, lineHeightStyle, shiftPx)
 
 class ComposeLineHeightSpan(
     @Px private val lineHeight: Int,
     private val style: LineHeightStyle? = null,
     @Px private val shiftPx: Int = 0,
 ) : LineHeightSpan.WithDensity {
-
-    /* ─────────── chooseHeight ─────────── */
-
     override fun chooseHeight(
         text: CharSequence, start: Int, end: Int,
         spanstartv: Int, v: Int,
@@ -329,8 +311,6 @@ class ComposeLineHeightSpan(
         fm: Paint.FontMetricsInt, paint: TextPaint?
     ) = apply(text, start, end, fm, paint)
 
-    /* ─────────── main ─────────── */
-
     private fun apply(
         text: CharSequence,
         start: Int,
@@ -338,7 +318,7 @@ class ComposeLineHeightSpan(
         fm: Paint.FontMetricsInt,
         paint: TextPaint?,
     ) {
-        val baseFm = paint?.fontMetricsInt ?: fm   // paint が null の場合は fallback
+        val baseFm = paint?.fontMetricsInt ?: fm
         val origin = baseFm.descent - baseFm.ascent
         if (origin <= 0) return
 
@@ -347,21 +327,17 @@ class ComposeLineHeightSpan(
 
         val (topPad, botPad) = when (align) {
             LineHeightStyle.Alignment.Proportional -> proportionalPads(fm, origin)
-            LineHeightStyle.Alignment.Center       -> centerPads(fm, origin)
+            LineHeightStyle.Alignment.Center       -> centerPads(origin)
             LineHeightStyle.Alignment.Top          -> 0          to (lineHeight - origin)
             LineHeightStyle.Alignment.Bottom       -> (lineHeight - origin) to 0
             else -> proportionalPads(fm, origin)
         }
-        println("isFirstLine: topPad: $topPad, botPad: $botPad, origin: $origin lineHeight: $lineHeight")
 
-        // ── Trim 処理 ──
         val paraStart = (start downTo 0).firstOrNull { text[it] == '\n' }?.plus(1) ?: 0
         val paraEnd   = (end until text.length).firstOrNull { text[it] == '\n' } ?: text.length
 
         val isFirstLine = start == paraStart
         val isLastLine  = end   == paraEnd
-
-        println("isFirstLine: $isFirstLine, isLastLine: $isLastLine")
 
         var finalTop = when (trim) {
             LineHeightStyle.Trim.None,
@@ -379,13 +355,11 @@ class ComposeLineHeightSpan(
             else -> if (isLastLine) 0 else botPad
         }
 
-        if (shiftPx < 0 && isFirstLine) {              // 上方向（Superscript）
-            finalTop += -shiftPx        // 上側余白を増やす
-        } else if (shiftPx > 0 && isLastLine) {       // 下方向（Subscript）
-            finalBot += shiftPx         // 下側余白を増やす
+        if (shiftPx < 0 && isFirstLine) {
+            finalTop += -shiftPx
+        } else if (shiftPx > 0 && isLastLine) {
+            finalBot += shiftPx
         }
-
-        println("isFirstLine finalTop: $finalTop, finalBot: $finalBot")
 
         fm.ascent  = baseFm.ascent  - finalTop
         fm.top     = baseFm.top     - finalTop
@@ -393,34 +367,29 @@ class ComposeLineHeightSpan(
         fm.bottom  = baseFm.bottom  + finalBot
     }
 
-    /* ─────────── Alignment = Proportional ─────────── */
-
     private fun proportionalPads(
         fm: Paint.FontMetricsInt,
-        origin: Int            // ascent+descent (px, 正数)
+        origin: Int
     ): Pair<Int, Int> {
-        val diff = lineHeight - origin      // ±差分
+        val diff = lineHeight - origin
         if (diff == 0) return 0 to 0
 
-        val ascentAbs = -fm.ascent          // baseline 上側
+        val ascentAbs = -fm.ascent
         val ratio     = ascentAbs.toDouble() / origin
 
-        // 差分を比率で配分（上側は必ず切り上げ）
         val topExtra  = ceil(diff * ratio).toInt()
         val botExtra  = diff - topExtra
         return topExtra to botExtra
     }
 
-    /* ─────────── Alignment = Center ─────────── */
     private fun centerPads(
-        fm: Paint.FontMetricsInt,
-        origin: Int      // ascent + descent
+        origin: Int
     ): Pair<Int, Int> {
-        val diff = lineHeight - origin          // 余剰 (必ず正数でここに来る)
-        if (diff == 0) return 0 to 0            // 行高が既に一致
+        val diff = lineHeight - origin
+        if (diff == 0) return 0 to 0
 
-        val topPad = diff / 2                   // 切り捨て
-        val botPad = diff - topPad              // 残りを下側へ (diff が奇数なら +1px)
+        val topPad = diff / 2
+        val botPad = diff - topPad
 
         return topPad to botPad
     }
