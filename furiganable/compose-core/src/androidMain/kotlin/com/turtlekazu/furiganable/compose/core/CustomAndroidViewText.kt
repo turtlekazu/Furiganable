@@ -10,6 +10,7 @@ import android.text.TextPaint
 import android.text.style.BackgroundColorSpan
 import android.text.style.LeadingMarginSpan
 import android.text.style.MetricAffectingSpan
+import android.util.LayoutDirection
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
@@ -24,7 +25,10 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFontFamilyResolver
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.MultiParagraph
+import androidx.compose.ui.text.TextLayoutInput
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -39,8 +43,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlin.math.roundToInt
 
@@ -50,7 +56,7 @@ internal fun CustomAndroidViewText(
     text: String,
     modifier: Modifier = Modifier,
     style: TextStyle = TextStyle.Default,
-    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null, // TODO: handle text layout
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
@@ -170,6 +176,8 @@ internal fun CustomAndroidViewText(
                 Hyphens.Auto -> Layout.HYPHENATION_FREQUENCY_NORMAL
                 else -> Layout.HYPHENATION_FREQUENCY_NONE
             }
+
+            // TODO: handle style.textMotion
 
             // Independent params from textStyle
             textView.setMaxLines(maxLines)
