@@ -9,10 +9,12 @@ import android.text.Spanned
 import android.text.TextPaint
 import android.text.style.BackgroundColorSpan
 import android.text.style.LeadingMarginSpan
+import android.text.style.LineHeightSpan
 import android.text.style.MetricAffectingSpan
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.Px
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
@@ -27,6 +29,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextPainter.paint
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -35,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextDirection
@@ -45,6 +49,7 @@ import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 @Composable
@@ -108,19 +113,14 @@ internal actual fun TextSpacingRemoved(
             color = finalColor,
             lineHeight = if (preMergedStyle.lineHeight.isSpecified) {
                 preMergedStyle.lineHeight
-            } else DEFAULT_FONT_SIZE.sp * 1.2f
+            } else DEFAULT_FONT_SIZE.sp * 1.2f,
+            fontSize = if (preMergedStyle.fontSize.isSpecified) {
+                preMergedStyle.fontSize
+            } else DEFAULT_FONT_SIZE.sp,
+            letterSpacing = if (preMergedStyle.letterSpacing.isSpecified) {
+                preMergedStyle.letterSpacing
+            } else DEFAULT_LETTER_SPACING.sp,
         )
-
-        val finalFontSize = when {
-            mergedStyle.fontSize.isSpecified -> mergedStyle.fontSize
-            style.fontSize.isSpecified -> style.fontSize
-            else -> DEFAULT_FONT_SIZE.sp
-        }
-
-        val finalLetterSpacing = when {
-            mergedStyle.letterSpacing.isSpecified -> mergedStyle.letterSpacing
-            else -> DEFAULT_LETTER_SPACING.sp
-        }
 
         val resolver: FontFamily.Resolver = LocalFontFamilyResolver.current
         val typeface: Typeface =
@@ -146,11 +146,11 @@ internal actual fun TextSpacingRemoved(
                 textView.setTextColor(finalColor.toArgb())
                 textView.setTextSize(
                     TypedValue.COMPLEX_UNIT_SP,
-                    finalFontSize.value,
+                    mergedStyle.fontSize.value,
                 )
                 textView.typeface = typeface
                 mergedStyle.fontFeatureSettings?.let { textView.fontFeatureSettings = it }
-                textView.letterSpacing = finalLetterSpacing.value / finalFontSize.value
+                textView.letterSpacing = mergedStyle.letterSpacing.value / mergedStyle.fontSize.value
 
                 textView.applyMergedStyle(
                     rawText = text,
@@ -249,7 +249,31 @@ fun TextView.applyMergedStyle(
         }
         override fun updateMeasureState(p: TextPaint) = updateDrawState(p)
     }
+    // MetricAffectingSpan apply to all lines
     spannable.setSpan(commonSpan, 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+    mergedStyle.textIndent?.let { indent ->
+        val firstPx = with(density) { indent.firstLine.toPx().toInt() }
+        val restPx = with(density) { indent.restLine.toPx().toInt() }
+        val leadingSpan = LeadingMarginSpan.Standard(firstPx, restPx)
+        // LeadingMarginSpan apply to all lines
+        spannable.setSpan(leadingSpan, 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+
+    if (mergedStyle.background != Color.Unspecified) {
+        // BackgroundColorSpan apply to all lines
+        spannable.setSpan(
+            BackgroundColorSpan(mergedStyle.background.toArgb()),
+            0,
+            spannable.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+    }
+
+    val lineHeightPx = with(density) { mergedStyle.lineHeight.toPx().roundToInt() }
+
+    val composeSpan = createLineHeightSpan(lineHeightPx, mergedStyle.lineHeightStyle)
+    spannable.setSpan(composeSpan, 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
     val shiftPx = mergedStyle.baselineShift?.let { shift ->
         val factor = when (shift) {
@@ -259,7 +283,6 @@ fun TextView.applyMergedStyle(
         }
         (textSize * factor).toInt()
     } ?: 0
-
     if (shiftPx != 0) {
         post {
             val lay = layout ?: return@post
@@ -270,58 +293,124 @@ fun TextView.applyMergedStyle(
                 override fun updateDrawState(p: TextPaint) { p.baselineShift += shiftPx }
                 override fun updateMeasureState(p: TextPaint) = updateDrawState(p)
             }
+            // MetricAffectingSpan apply only to the last line
             spannable.setSpan(shiftSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            text = spannable
+            setText(spannable, TextView.BufferType.SPANNABLE)
         }
     } else {
-        text = spannable
+        setText(spannable, TextView.BufferType.SPANNABLE)
     }
-
-    mergedStyle.textIndent?.let { indent ->
-        val firstPx = with(density) { indent.firstLine.toPx().toInt() }
-        val restPx = with(density) { indent.restLine.toPx().toInt() }
-        spannable.setSpan(
-            LeadingMarginSpan.Standard(firstPx, restPx),
-            0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-
-    if (mergedStyle.background != Color.Unspecified) {
-        spannable.setSpan(
-            BackgroundColorSpan(mergedStyle.background.toArgb()),
-            0,                   // start
-            spannable.length,    // end
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-
-    setText(spannable, TextView.BufferType.SPANNABLE)
-
-    val lineHeightPx = with(density) { mergedStyle.lineHeight.toPx().roundToInt() }
-
-    this.lineHeight = lineHeightPx
-
-    println("lineHeightPx: $lineHeightPx density: ${density.density}")
-
-    val (padTop, padBottom) =
-        calcSingleLinePadding(
-            paint = this.paint,
-            lineHeightPx,
-        )
-
-    println("padTop: $padTop padBottom: $padBottom")
-    setPadding(0, padTop, 0, padBottom)
 }
 
-private fun calcSingleLinePadding(
-    paint: TextPaint,
-    lineHeightPx: Int,
-): Pair<Int, Int> {
-    val fm = paint.fontMetricsInt
-    val glyphBox = abs(fm.ascent) + fm.descent
-    val extra = (lineHeightPx - glyphBox).coerceAtLeast(0)
-    val topPad = (extra / 2f).toInt()
-    val bottomPad = extra - topPad
+fun createLineHeightSpan(lineHeightPx: Int, lineHeightStyle: LineHeightStyle?): LineHeightSpan =
+    ComposeLineHeightSpan(lineHeightPx, lineHeightStyle)
 
-    return topPad to bottomPad
+class ComposeLineHeightSpan(
+    @Px private val lineHeight: Int,
+    private val style: LineHeightStyle? = null
+) : LineHeightSpan.WithDensity {
+
+    /* ─────────── chooseHeight ─────────── */
+
+    override fun chooseHeight(
+        text: CharSequence, start: Int, end: Int,
+        spanstartv: Int, v: Int,
+        fm: Paint.FontMetricsInt
+    ) = apply(text, start, end, fm, null)
+
+    override fun chooseHeight(
+        text: CharSequence, start: Int, end: Int,
+        spanstartv: Int, v: Int,
+        fm: Paint.FontMetricsInt, paint: TextPaint?
+    ) = apply(text, start, end, fm, paint)
+
+    /* ─────────── main ─────────── */
+
+    private fun apply(
+        text: CharSequence,
+        start: Int,
+        end: Int,
+        fm: Paint.FontMetricsInt,
+        paint: TextPaint?,
+    ) {
+        val baseFm = paint?.fontMetricsInt ?: fm   // paint が null の場合は fallback
+        val origin = baseFm.descent - baseFm.ascent
+        if (origin <= 0) return
+
+        val align = style?.alignment ?: LineHeightStyle.Alignment.Proportional
+        val trim  = style?.trim      ?: LineHeightStyle.Trim.Both
+
+        val (topPad, botPad) = when (align) {
+            LineHeightStyle.Alignment.Proportional -> proportionalPads(fm, origin)
+            LineHeightStyle.Alignment.Center       -> centerPads(fm, origin)
+            LineHeightStyle.Alignment.Top          -> 0          to (lineHeight - origin)
+            LineHeightStyle.Alignment.Bottom       -> (lineHeight - origin) to 0
+            else -> proportionalPads(fm, origin)
+        }
+        println("isFirstLine: topPad: $topPad, botPad: $botPad, origin: $origin lineHeight: $lineHeight")
+
+        // ── Trim 処理 ──
+        val paraStart = (start downTo 0).firstOrNull { text[it] == '\n' }?.plus(1) ?: 0
+        val paraEnd   = (end until text.length).firstOrNull { text[it] == '\n' } ?: text.length
+
+        val isFirstLine = start == paraStart
+        val isLastLine  = end   == paraEnd
+
+        println("isFirstLine: $isFirstLine, isLastLine: $isLastLine")
+
+        val finalTop = when (trim) {
+            LineHeightStyle.Trim.None,
+            LineHeightStyle.Trim.LastLineBottom -> topPad
+            LineHeightStyle.Trim.FirstLineTop,
+            LineHeightStyle.Trim.Both          -> if (isFirstLine) 0 else topPad
+            else -> if (isFirstLine) 0 else topPad
+        }
+
+        val finalBot = when (trim) {
+            LineHeightStyle.Trim.None,
+            LineHeightStyle.Trim.FirstLineTop -> botPad
+            LineHeightStyle.Trim.LastLineBottom,
+            LineHeightStyle.Trim.Both         -> if (isLastLine) 0 else botPad
+            else -> if (isLastLine) 0 else botPad
+        }
+
+        println("isFirstLine finalTop: $finalTop, finalBot: $finalBot")
+
+        fm.ascent  = baseFm.ascent  - finalTop
+        fm.top     = baseFm.top     - finalTop
+        fm.descent = baseFm.descent + finalBot
+        fm.bottom  = baseFm.bottom  + finalBot
+    }
+
+    /* ─────────── Alignment = Proportional ─────────── */
+
+    private fun proportionalPads(
+        fm: Paint.FontMetricsInt,
+        origin: Int            // ascent+descent (px, 正数)
+    ): Pair<Int, Int> {
+        val diff = lineHeight - origin      // ±差分
+        if (diff == 0) return 0 to 0
+
+        val ascentAbs = -fm.ascent          // baseline 上側
+        val ratio     = ascentAbs.toDouble() / origin
+
+        // 差分を比率で配分（上側は必ず切り上げ）
+        val topExtra  = ceil(diff * ratio).toInt()
+        val botExtra  = diff - topExtra
+        return topExtra to botExtra
+    }
+
+    /* ─────────── Alignment = Center ─────────── */
+    private fun centerPads(
+        fm: Paint.FontMetricsInt,
+        origin: Int      // ascent + descent
+    ): Pair<Int, Int> {
+        val diff = lineHeight - origin          // 余剰 (必ず正数でここに来る)
+        if (diff == 0) return 0 to 0            // 行高が既に一致
+
+        val topPad = diff / 2                   // 切り捨て
+        val botPad = diff - topPad              // 残りを下側へ (diff が奇数なら +1px)
+
+        return topPad to botPad
+    }
 }
