@@ -146,7 +146,7 @@ fun SampleComponent() {
 
     // Replace Text component with TextWithReading component
     TextWithReading(
-        text = "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。",
+        formattedText = "これは[試験用[しけんよう]]の[文字列[もじれつ]]です。",
     )
 }
 ```
@@ -166,7 +166,7 @@ fun SampleComponent() {
 
     // You can use localized string with furigana
     TextWithReading(
-        text = stringResource(R.string.sample_text),
+        formattedText = stringResource(R.string.sample_text),
     )
 }
 ```
