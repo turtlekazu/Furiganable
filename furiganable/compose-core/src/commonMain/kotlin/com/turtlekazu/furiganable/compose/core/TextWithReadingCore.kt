@@ -240,7 +240,7 @@ private fun calculateAnnotatedString(
                         ),
                     children = {
                         Box(
-                            contentAlignment = Alignment.TopCenter,
+                            contentAlignment = Alignment.Center,
                             modifier = Modifier.fillMaxSize(),
                         ) {
                             TextSpacingRemoved(
