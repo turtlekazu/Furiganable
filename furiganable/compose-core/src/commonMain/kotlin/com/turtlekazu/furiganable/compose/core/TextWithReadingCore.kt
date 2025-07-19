@@ -14,10 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -26,6 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.isSpecified
@@ -155,6 +160,9 @@ fun TextWithReadingCore(
             else -> minLineHeight
         }
 
+        val density = LocalDensity.current
+        val fontResolver = LocalFontFamilyResolver.current
+
         val (textContent, inlineContent) =
             remember(formattedText) {
                 calculateAnnotatedString(
@@ -167,6 +175,8 @@ fun TextWithReadingCore(
                     furiganaGap = resolvedFuriganaGap,
                     furiganaFontSize = resolvedFuriganaFontSize,
                     furiganaLetterSpacing = resolvedFuriganaLetterSpacing,
+                    fontResolver = fontResolver,
+                    density = density,
                 )
             }
 
@@ -205,6 +215,8 @@ private fun calculateAnnotatedString(
     furiganaGap: TextUnit,
     furiganaFontSize: TextUnit,
     furiganaLetterSpacing: TextUnit,
+    fontResolver: FontFamily.Resolver,
+    density: Density,
 ): Pair<AnnotatedString, Map<String, InlineTextContent>> {
     val inlineContent = mutableMapOf<String, InlineTextContent>()
 
@@ -220,13 +232,29 @@ private fun calculateAnnotatedString(
             val height = if (style.lineHeight.isSpecified) {
                 style.lineHeight
             } else if (style.fontSize.isSpecified) {
-                style.fontSize * 1.2f
+                style.fontSize
             } else {
                 DEFAULT_FONT_SIZE.sp
             }
 
-            val furiganaWidth = reading.length.toDouble() * furiganaFontSize.value
-            val textWidth = (text.length.toDouble()) * style.fontSize.value
+            val furiganaWidth = measureWidthPx(
+                text = reading,
+                style = style.merge(
+                    fontSize = furiganaFontSize,
+                    letterSpacing = furiganaLetterSpacing,
+                ),
+                density = density,
+                layoutDirection = LayoutDirection.Ltr, // Assuming Ltr for simplicity
+                fontFamilyResolver = fontResolver,
+            )
+            val textWidth = measureWidthPx(
+                text = text,
+                style = style,
+                density = density,
+                layoutDirection = LayoutDirection.Ltr, // Assuming Ltr for simplicity
+                fontFamilyResolver = fontResolver,
+            )
+
             val width = max(furiganaWidth, textWidth).sp
 
             appendInlineContent(text, text)
@@ -285,4 +313,26 @@ private fun calculateAnnotatedString(
                 )
         }
     } to inlineContent
+}
+
+private fun measureWidthPx(
+    text: String,
+    style: TextStyle,
+    density: Density,
+    layoutDirection: LayoutDirection,
+    fontFamilyResolver: FontFamily.Resolver   // ← 呼び出し側で渡す
+): Float {
+    val measurer = TextMeasurer(
+        defaultLayoutDirection = layoutDirection,
+        defaultFontFamilyResolver = fontFamilyResolver,
+        defaultDensity = density,
+        cacheSize = 8
+    )
+    val result = measurer.measure(
+        text = text,
+        style = style,
+        softWrap = false,
+        overflow = TextOverflow.Visible
+    )
+    return result.size.width.toFloat() / density.density
 }
