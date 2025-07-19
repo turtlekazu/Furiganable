@@ -29,7 +29,7 @@ Module | Recommended | Description | Use Case
 
  Android (> 28) | Android (<= 28) | iOS 18 
  --- | --- | ---
- <img src="https://github.com/user-attachments/assets/2cb83b2d-51c9-4c82-a269-be3ee04517e7" width="320px"> | <img src="https://github.com/user-attachments/assets/b6a61b77-e397-422f-9c41-f00a2de8ef83" width="320px"> | <img src="https://github.com/user-attachments/assets/4c464e21-3571-49e4-bcb6-beab767bc8cf" width="320px">
+ <img src="https://github.com/user-attachments/assets/5c1ef11e-01e5-45c6-9894-5e6d6272cdf0" width="320px"> | <img src="https://github.com/user-attachments/assets/aca9e7f7-4fcf-4133-9857-af5e9b9ee746" width="320px"> | <img src="https://github.com/user-attachments/assets/0cc3ef5c-94fb-429b-818a-8d379f5fec47" width="320px">
     
 </details>
 
@@ -38,8 +38,8 @@ Module | Recommended | Description | Use Case
 
  Android (> 28) | Android (<= 28) | iOS 18 
  --- | --- | ---
- <img src="https://github.com/user-attachments/assets/9d1604dd-903f-455d-8861-1b60f84aeb38" width="320px"> | <img src="https://github.com/user-attachments/assets/85c56c90-1e88-4576-9433-8d2d529e50d7" width="320px"> | <img src="https://github.com/user-attachments/assets/e6b293c9-c666-4e37-ac3d-acac25de910f" width="320px">
-    
+ <img src="https://github.com/user-attachments/assets/d0fbad6e-0805-4e59-b7f3-6a8caeac3e9b" width="320px"> | <img src="https://github.com/user-attachments/assets/313ac5b9-4bb9-4a52-b142-f2fcc9c2b582" width="320px"> | <img src="https://github.com/user-attachments/assets/c7dda46b-5692-4fa5-aa5e-a1dd2a119cb4" width="320px">
+
 </details>
 
 # API Reference
@@ -195,8 +195,9 @@ You can customize the appearance of the furigana text by passing additional para
 - **`furiganaLetterSpacing`**:  
   Letter spacing for the furigana text.  
   Defaults to `-style.fontSize * 0.03f` if unspecified.
+  
+<img width="1024" alt="Furigana Params" src="https://github.com/user-attachments/assets/b8f45ce8-a84d-47d0-a017-12a70aa56848" />
 
-<image width="720px" src="https://github.com/user-attachments/assets/00986f43-ead3-4708-99fe-eb1cf7e59dbd"></image>
 
 
 # Examples
