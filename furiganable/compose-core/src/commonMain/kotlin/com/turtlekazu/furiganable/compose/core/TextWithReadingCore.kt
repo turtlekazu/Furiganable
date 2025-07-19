@@ -33,7 +33,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 import kotlin.math.max
@@ -294,8 +293,7 @@ private fun calculateAnnotatedString(
                                     modifier = Modifier
                                         .graphicsLayer {
                                             translationY = -(
-                                                style.fontSize.toPx() *
-                                                    (0.5f + getFuriganaSpacingCompensation()) +
+                                                style.fontSize.toPx() * 0.5f +
                                                     furiganaFontSize.toPx() * 0.5f +
                                                     furiganaGap.toPx()
                                                 )
