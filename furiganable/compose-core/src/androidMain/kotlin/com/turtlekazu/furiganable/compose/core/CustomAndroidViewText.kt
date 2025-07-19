@@ -79,7 +79,7 @@ internal fun CustomAndroidViewText(
         color = finalColor,
         lineHeight = if (style.lineHeight.isSpecified) {
             style.lineHeight
-        } else DEFAULT_FONT_SIZE.sp * 1.2f,
+        } else DEFAULT_FONT_SIZE.sp,
         fontSize = if (style.fontSize.isSpecified) {
             style.fontSize
         } else DEFAULT_FONT_SIZE.sp,
