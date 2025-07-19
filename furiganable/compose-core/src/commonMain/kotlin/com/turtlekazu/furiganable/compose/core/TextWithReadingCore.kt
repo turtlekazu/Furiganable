@@ -116,49 +116,60 @@ fun TextWithReadingCore(
         )
 
     if (formattedText.hasReadings() && furiganaEnabled) {
-        val resolvedFontSize = when {
-            mergedStyle.fontSize.isSpecified -> mergedStyle.fontSize
-            else -> DEFAULT_FONT_SIZE.sp
-        }
+        val resolvedFontSize =
+            when {
+                mergedStyle.fontSize.isSpecified -> mergedStyle.fontSize
+                else -> DEFAULT_FONT_SIZE.sp
+            }
 
-        val resolvedLetterSpacing = when {
-            mergedStyle.letterSpacing.isSpecified -> mergedStyle.letterSpacing
-            else -> DEFAULT_LETTER_SPACING.sp
-        }
+        val resolvedLetterSpacing =
+            when {
+                mergedStyle.letterSpacing.isSpecified -> mergedStyle.letterSpacing
+                else -> DEFAULT_LETTER_SPACING.sp
+            }
 
-        val resolvedFuriganaGap = when {
-            furiganaGap.isSpecified -> furiganaGap
-            else -> resolvedFontSize * 0.03f
-        }
+        val resolvedFuriganaGap =
+            when {
+                furiganaGap.isSpecified -> furiganaGap
+                else -> resolvedFontSize * 0.03f
+            }
 
         val resolvedFuriganaLetterSpacing =
-            if (furiganaLetterSpacing.isSpecified) furiganaLetterSpacing
-            else -resolvedFontSize * 0.03f
+            if (furiganaLetterSpacing.isSpecified) {
+                furiganaLetterSpacing
+            } else {
+                -resolvedFontSize * 0.03f
+            }
 
         val resolvedFuriganaFontSize =
             if (furiganaFontSize.isSpecified) furiganaFontSize else resolvedFontSize * 0.45f
 
         val resolvedFuriganaLineHeight =
-            if (furiganaLineHeight.isSpecified) furiganaLineHeight
-            else resolvedFuriganaFontSize
-
-        val minLineHeight = (
-            resolvedFontSize.value +
-                max(resolvedFuriganaFontSize.value, resolvedFuriganaLineHeight.value) +
-                resolvedFuriganaGap.value
-            ).sp
-
-        val resolvedLineHeight = when {
-            mergedStyle.lineHeight.isSpecified -> {
-                if (mergedStyle.lineHeight > minLineHeight) {
-                    mergedStyle.lineHeight
-                } else {
-                    minLineHeight
-                }
+            if (furiganaLineHeight.isSpecified) {
+                furiganaLineHeight
+            } else {
+                resolvedFuriganaFontSize
             }
 
-            else -> minLineHeight
-        }
+        val minLineHeight =
+            (
+                resolvedFontSize.value +
+                    max(resolvedFuriganaFontSize.value, resolvedFuriganaLineHeight.value) +
+                    resolvedFuriganaGap.value
+            ).sp
+
+        val resolvedLineHeight =
+            when {
+                mergedStyle.lineHeight.isSpecified -> {
+                    if (mergedStyle.lineHeight > minLineHeight) {
+                        mergedStyle.lineHeight
+                    } else {
+                        minLineHeight
+                    }
+                }
+
+                else -> minLineHeight
+            }
 
         val density = LocalDensity.current
         val fontResolver = LocalFontFamilyResolver.current
@@ -168,10 +179,11 @@ fun TextWithReadingCore(
                 calculateAnnotatedString(
                     textDataList = formattedText.toTextData(),
                     showReadings = furiganaEnabled,
-                    style = mergedStyle.merge(
-                        fontSize = resolvedFontSize,
-                        letterSpacing = resolvedLetterSpacing,
-                    ),
+                    style =
+                        mergedStyle.merge(
+                            fontSize = resolvedFontSize,
+                            letterSpacing = resolvedLetterSpacing,
+                        ),
                     furiganaGap = resolvedFuriganaGap,
                     furiganaFontSize = resolvedFuriganaFontSize,
                     furiganaLineHeight = resolvedFuriganaLineHeight,
@@ -231,31 +243,35 @@ private fun calculateAnnotatedString(
                 append(text)
                 continue
             }
-            val height = if (style.lineHeight.isSpecified) {
-                style.lineHeight
-            } else if (style.fontSize.isSpecified) {
-                style.fontSize
-            } else {
-                DEFAULT_FONT_SIZE.sp
-            }
+            val height =
+                if (style.lineHeight.isSpecified) {
+                    style.lineHeight
+                } else if (style.fontSize.isSpecified) {
+                    style.fontSize
+                } else {
+                    DEFAULT_FONT_SIZE.sp
+                }
 
-            val furiganaWidth = measureWidthPx(
-                text = reading,
-                style = style.merge(
-                    fontSize = furiganaFontSize,
-                    letterSpacing = furiganaLetterSpacing,
-                ),
-                density = density,
-                layoutDirection = LayoutDirection.Ltr, // Assuming Ltr for simplicity
-                fontFamilyResolver = fontResolver,
-            )
-            val textWidth = measureWidthPx(
-                text = text,
-                style = style,
-                density = density,
-                layoutDirection = LayoutDirection.Ltr, // Assuming Ltr for simplicity
-                fontFamilyResolver = fontResolver,
-            )
+            val furiganaWidth =
+                measureWidthPx(
+                    text = reading,
+                    style =
+                        style.merge(
+                            fontSize = furiganaFontSize,
+                            letterSpacing = furiganaLetterSpacing,
+                        ),
+                    density = density,
+                    layoutDirection = LayoutDirection.Ltr,
+                    fontFamilyResolver = fontResolver,
+                )
+            val textWidth =
+                measureWidthPx(
+                    text = text,
+                    style = style,
+                    density = density,
+                    layoutDirection = LayoutDirection.Ltr,
+                    fontFamilyResolver = fontResolver,
+                )
 
             val width = max(furiganaWidth, textWidth).sp
 
@@ -277,12 +293,14 @@ private fun calculateAnnotatedString(
                                 modifier = Modifier.wrapContentWidth(unbounded = true),
                                 text = text,
                                 color = style.color,
-                                style = style.merge(
-                                    lineHeightStyle = LineHeightStyle(
-                                        alignment = LineHeightStyle.Alignment.Proportional,
-                                        trim = LineHeightStyle.Trim.Both,
+                                style =
+                                    style.merge(
+                                        lineHeightStyle =
+                                            LineHeightStyle(
+                                                alignment = LineHeightStyle.Alignment.Proportional,
+                                                trim = LineHeightStyle.Trim.Both,
+                                            ),
                                     ),
-                                ),
                                 maxLines = 1,
                                 softWrap = false,
                                 overflow = TextOverflow.Visible,
@@ -290,14 +308,16 @@ private fun calculateAnnotatedString(
 
                             if (showReadings) {
                                 Box(
-                                    modifier = Modifier
-                                        .graphicsLayer {
-                                            translationY = -(
-                                                style.fontSize.toPx() * 0.5f +
-                                                    furiganaFontSize.toPx() * 0.5f +
-                                                    furiganaGap.toPx()
-                                                )
-                                        },
+                                    modifier =
+                                        Modifier
+                                            .graphicsLayer {
+                                                translationY =
+                                                    -(
+                                                        style.fontSize.toPx() * 0.5f +
+                                                            furiganaFontSize.toPx() * 0.5f +
+                                                            furiganaGap.toPx()
+                                                    )
+                                            },
                                 ) {
                                     TextSpacingRemoved(
                                         modifier = Modifier.wrapContentSize(unbounded = true),
@@ -310,10 +330,11 @@ private fun calculateAnnotatedString(
                                             style.merge(
                                                 fontSize = furiganaFontSize,
                                                 lineHeight = furiganaLineHeight,
-                                                lineHeightStyle = LineHeightStyle(
-                                                    alignment = LineHeightStyle.Alignment.Proportional,
-                                                    trim = LineHeightStyle.Trim.Both,
-                                                ),
+                                                lineHeightStyle =
+                                                    LineHeightStyle(
+                                                        alignment = LineHeightStyle.Alignment.Proportional,
+                                                        trim = LineHeightStyle.Trim.Both,
+                                                    ),
                                                 letterSpacing = furiganaLetterSpacing,
                                             ),
                                     )
@@ -331,19 +352,21 @@ private fun measureWidthPx(
     style: TextStyle,
     density: Density,
     layoutDirection: LayoutDirection,
-    fontFamilyResolver: FontFamily.Resolver   // ← 呼び出し側で渡す
+    fontFamilyResolver: FontFamily.Resolver,
 ): Float {
-    val measurer = TextMeasurer(
-        defaultLayoutDirection = layoutDirection,
-        defaultFontFamilyResolver = fontFamilyResolver,
-        defaultDensity = density,
-        cacheSize = 8
-    )
-    val result = measurer.measure(
-        text = text,
-        style = style,
-        softWrap = false,
-        overflow = TextOverflow.Visible
-    )
+    val measurer =
+        TextMeasurer(
+            defaultLayoutDirection = layoutDirection,
+            defaultFontFamilyResolver = fontFamilyResolver,
+            defaultDensity = density,
+            cacheSize = 8,
+        )
+    val result =
+        measurer.measure(
+            text = text,
+            style = style,
+            softWrap = false,
+            overflow = TextOverflow.Visible,
+        )
     return result.size.width.toFloat() / density.density
 }
