@@ -26,6 +26,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -277,7 +278,12 @@ private fun calculateAnnotatedString(
                                 modifier = Modifier.wrapContentWidth(unbounded = true),
                                 text = text,
                                 color = style.color,
-                                style = style,
+                                style = style.merge(
+                                    lineHeightStyle = LineHeightStyle(
+                                        alignment = LineHeightStyle.Alignment.Proportional,
+                                        trim = LineHeightStyle.Trim.Both,
+                                    ),
+                                ),
                                 maxLines = 1,
                                 softWrap = false,
                                 overflow = TextOverflow.Visible,
@@ -306,6 +312,10 @@ private fun calculateAnnotatedString(
                                             style.merge(
                                                 fontSize = furiganaFontSize,
                                                 lineHeight = furiganaLineHeight,
+                                                lineHeightStyle = LineHeightStyle(
+                                                    alignment = LineHeightStyle.Alignment.Proportional,
+                                                    trim = LineHeightStyle.Trim.Both,
+                                                ),
                                                 letterSpacing = furiganaLetterSpacing,
                                             ),
                                     )
