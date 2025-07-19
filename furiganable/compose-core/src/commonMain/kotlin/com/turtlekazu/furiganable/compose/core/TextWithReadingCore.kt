@@ -52,7 +52,7 @@ import kotlin.math.max
  * @param furiganaEnabled Whether to enable the furigana. If false, normal text component will be used.
  * @param furiganaGap Space between the main text and the furigana. If unspecified, uses `style.fontSize * 0.03f`.
  * @param furiganaFontSize Font size for the furigana text. If unspecified, `style.fontSize * 0.45f`.
- * @param furiganaLineHeight Line height for the furigana text. If unspecified, uses `furiganaFontSize * 1.2f`.
+ * @param furiganaLineHeight Line height for the furigana text. If unspecified, uses `furiganaFontSize`.
  * @param furiganaLetterSpacing Letter spacing for the furigana text. If unspecified, uses `-style.fontSize * 0.03f`.
  *
  * @param modifier Modifier to apply to the layout.
@@ -140,7 +140,7 @@ fun TextWithReadingCore(
 
         val resolvedFuriganaLineHeight =
             if (furiganaLineHeight.isSpecified) furiganaLineHeight
-            else resolvedFuriganaFontSize * 1.2f
+            else resolvedFuriganaFontSize
 
         val minLineHeight = (
             resolvedFontSize.value +
@@ -174,6 +174,7 @@ fun TextWithReadingCore(
                     ),
                     furiganaGap = resolvedFuriganaGap,
                     furiganaFontSize = resolvedFuriganaFontSize,
+                    furiganaLineHeight = resolvedFuriganaLineHeight,
                     furiganaLetterSpacing = resolvedFuriganaLetterSpacing,
                     fontResolver = fontResolver,
                     density = density,
@@ -214,6 +215,7 @@ private fun calculateAnnotatedString(
     style: TextStyle,
     furiganaGap: TextUnit,
     furiganaFontSize: TextUnit,
+    furiganaLineHeight: TextUnit,
     furiganaLetterSpacing: TextUnit,
     fontResolver: FontFamily.Resolver,
     density: Density,
@@ -303,6 +305,7 @@ private fun calculateAnnotatedString(
                                         style =
                                             style.merge(
                                                 fontSize = furiganaFontSize,
+                                                lineHeight = furiganaLineHeight,
                                                 letterSpacing = furiganaLetterSpacing,
                                             ),
                                     )
