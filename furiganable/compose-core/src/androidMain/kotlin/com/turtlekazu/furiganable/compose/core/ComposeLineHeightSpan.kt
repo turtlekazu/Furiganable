@@ -13,15 +13,22 @@ internal class ComposeLineHeightSpan(
     @Px private val shiftPx: Int = 0,
 ) : LineHeightSpan.WithDensity {
     override fun chooseHeight(
-        text: CharSequence, start: Int, end: Int,
-        spanstartv: Int, v: Int,
-        fm: Paint.FontMetricsInt
+        text: CharSequence,
+        start: Int,
+        end: Int,
+        spanstartv: Int,
+        v: Int,
+        fm: Paint.FontMetricsInt,
     ) = apply(text, start, end, fm, null)
 
     override fun chooseHeight(
-        text: CharSequence, start: Int, end: Int,
-        spanstartv: Int, v: Int,
-        fm: Paint.FontMetricsInt, paint: TextPaint?
+        text: CharSequence,
+        start: Int,
+        end: Int,
+        spanstartv: Int,
+        v: Int,
+        fm: Paint.FontMetricsInt,
+        paint: TextPaint?,
     ) = apply(text, start, end, fm, paint)
 
     private fun apply(
@@ -36,37 +43,44 @@ internal class ComposeLineHeightSpan(
         if (origin <= 0) return
 
         val align = style?.alignment ?: LineHeightStyle.Alignment.Proportional
-        val trim  = style?.trim      ?: LineHeightStyle.Trim.Both
+        val trim = style?.trim ?: LineHeightStyle.Trim.Both
 
-        val (topPad, botPad) = when (align) {
-            LineHeightStyle.Alignment.Proportional -> proportionalPads(baseFm, origin)
-            LineHeightStyle.Alignment.Center       -> centerPads(origin)
-            LineHeightStyle.Alignment.Top          -> 0          to (lineHeight - origin)
-            LineHeightStyle.Alignment.Bottom       -> (lineHeight - origin) to 0
-            else -> proportionalPads(fm, origin)
-        }
+        val (topPad, botPad) =
+            when (align) {
+                LineHeightStyle.Alignment.Proportional -> proportionalPads(baseFm, origin)
+                LineHeightStyle.Alignment.Center -> centerPads(origin)
+                LineHeightStyle.Alignment.Top -> 0 to (lineHeight - origin)
+                LineHeightStyle.Alignment.Bottom -> (lineHeight - origin) to 0
+                else -> proportionalPads(fm, origin)
+            }
 
         val paraStart = (start downTo 0).firstOrNull { text[it] == '\n' }?.plus(1) ?: 0
-        val paraEnd   = (end until text.length).firstOrNull { text[it] == '\n' } ?: text.length
+        val paraEnd = (end until text.length).firstOrNull { text[it] == '\n' } ?: text.length
 
         val isFirstLine = start == paraStart
-        val isLastLine  = end   == paraEnd
+        val isLastLine = end == paraEnd
 
-        var finalTop = when (trim) {
-            LineHeightStyle.Trim.None,
-            LineHeightStyle.Trim.LastLineBottom -> topPad
-            LineHeightStyle.Trim.FirstLineTop,
-            LineHeightStyle.Trim.Both          -> if (isFirstLine) 0 else topPad
-            else -> if (isFirstLine) 0 else topPad
-        }
+        var finalTop =
+            when (trim) {
+                LineHeightStyle.Trim.None,
+                LineHeightStyle.Trim.LastLineBottom,
+                -> topPad
+                LineHeightStyle.Trim.FirstLineTop,
+                LineHeightStyle.Trim.Both,
+                -> if (isFirstLine) 0 else topPad
+                else -> if (isFirstLine) 0 else topPad
+            }
 
-        var finalBot = when (trim) {
-            LineHeightStyle.Trim.None,
-            LineHeightStyle.Trim.FirstLineTop -> botPad
-            LineHeightStyle.Trim.LastLineBottom,
-            LineHeightStyle.Trim.Both         -> if (isLastLine) 0 else botPad
-            else -> if (isLastLine) 0 else botPad
-        }
+        var finalBot =
+            when (trim) {
+                LineHeightStyle.Trim.None,
+                LineHeightStyle.Trim.FirstLineTop,
+                -> botPad
+                LineHeightStyle.Trim.LastLineBottom,
+                LineHeightStyle.Trim.Both,
+                -> if (isLastLine) 0 else botPad
+                else -> if (isLastLine) 0 else botPad
+            }
 
         if (shiftPx < 0) { // Subscript
             if (isFirstLine) {
@@ -81,30 +95,28 @@ internal class ComposeLineHeightSpan(
             }
         }
 
-        fm.ascent  = baseFm.ascent  - finalTop
-        fm.top     = baseFm.top     - finalTop
+        fm.ascent = baseFm.ascent - finalTop
+        fm.top = baseFm.top - finalTop
         fm.descent = baseFm.descent + finalBot
-        fm.bottom  = baseFm.bottom  + finalBot
+        fm.bottom = baseFm.bottom + finalBot
     }
 
     private fun proportionalPads(
         fm: Paint.FontMetricsInt,
-        origin: Int
+        origin: Int,
     ): Pair<Int, Int> {
         val diff = lineHeight - origin
         if (diff == 0) return 0 to 0
 
         val ascentAbs = -fm.ascent
-        val ratio     = ascentAbs.toDouble() / origin
+        val ratio = ascentAbs.toDouble() / origin
 
-        val topExtra  = ceil(diff * ratio).toInt()
-        val botExtra  = diff - topExtra
+        val topExtra = ceil(diff * ratio).toInt()
+        val botExtra = diff - topExtra
         return topExtra to botExtra
     }
 
-    private fun centerPads(
-        origin: Int
-    ): Pair<Int, Int> {
+    private fun centerPads(origin: Int): Pair<Int, Int> {
         val diff = lineHeight - origin
         if (diff == 0) return 0 to 0
 

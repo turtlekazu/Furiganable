@@ -48,6 +48,4 @@ fun String.toTextData(): List<TextData> {
     return result
 }
 
-internal fun String.hasReadings(): Boolean {
-    return this.contains("[") && this.contains("]]")
-}
+internal fun String.hasReadings(): Boolean = this.contains("[") && this.contains("]]")

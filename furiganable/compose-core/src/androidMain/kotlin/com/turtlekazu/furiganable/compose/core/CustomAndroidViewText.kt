@@ -10,7 +10,6 @@ import android.text.TextPaint
 import android.text.style.BackgroundColorSpan
 import android.text.style.LeadingMarginSpan
 import android.text.style.MetricAffectingSpan
-import android.util.LayoutDirection
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
@@ -25,10 +24,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFontFamilyResolver
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.MultiParagraph
-import androidx.compose.ui.text.TextLayoutInput
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -43,10 +39,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlin.math.roundToInt
 
@@ -75,18 +69,28 @@ internal fun CustomAndroidViewText(
             DEFAULT_COLOR
         }
 
-    val mergedStyle = style.merge(
-        color = finalColor,
-        lineHeight = if (style.lineHeight.isSpecified) {
-            style.lineHeight
-        } else DEFAULT_FONT_SIZE.sp * 1.2f,
-        fontSize = if (style.fontSize.isSpecified) {
-            style.fontSize
-        } else DEFAULT_FONT_SIZE.sp,
-        letterSpacing = if (style.letterSpacing.isSpecified) {
-            style.letterSpacing
-        } else DEFAULT_LETTER_SPACING.sp,
-    )
+    val mergedStyle =
+        style.merge(
+            color = finalColor,
+            lineHeight =
+                if (style.lineHeight.isSpecified) {
+                    style.lineHeight
+                } else {
+                    DEFAULT_FONT_SIZE.sp
+                },
+            fontSize =
+                if (style.fontSize.isSpecified) {
+                    style.fontSize
+                } else {
+                    DEFAULT_FONT_SIZE.sp
+                },
+            letterSpacing =
+                if (style.letterSpacing.isSpecified) {
+                    style.letterSpacing
+                } else {
+                    DEFAULT_LETTER_SPACING.sp
+                },
+        )
 
     val resolver: FontFamily.Resolver = LocalFontFamilyResolver.current
     val typeface: Typeface =
@@ -159,23 +163,26 @@ internal fun CustomAndroidViewText(
                     else -> TextView.TEXT_ALIGNMENT_TEXT_START
                 }
 
-            textView.textDirection = when (mergedStyle.textDirection) {
-                TextDirection.Rtl -> View.TEXT_DIRECTION_RTL
-                TextDirection.Ltr -> View.TEXT_DIRECTION_LTR
-                else -> View.TEXT_DIRECTION_INHERIT
-            }
+            textView.textDirection =
+                when (mergedStyle.textDirection) {
+                    TextDirection.Rtl -> View.TEXT_DIRECTION_RTL
+                    TextDirection.Ltr -> View.TEXT_DIRECTION_LTR
+                    else -> View.TEXT_DIRECTION_INHERIT
+                }
 
-            textView.breakStrategy = when (mergedStyle.lineBreak) {
-                LineBreak.Simple -> Layout.BREAK_STRATEGY_SIMPLE
-                LineBreak.Paragraph -> Layout.BREAK_STRATEGY_HIGH_QUALITY
-                LineBreak.Heading -> Layout.BREAK_STRATEGY_BALANCED
-                else -> Layout.BREAK_STRATEGY_SIMPLE
-            }
+            textView.breakStrategy =
+                when (mergedStyle.lineBreak) {
+                    LineBreak.Simple -> Layout.BREAK_STRATEGY_SIMPLE
+                    LineBreak.Paragraph -> Layout.BREAK_STRATEGY_HIGH_QUALITY
+                    LineBreak.Heading -> Layout.BREAK_STRATEGY_BALANCED
+                    else -> Layout.BREAK_STRATEGY_SIMPLE
+                }
 
-            textView.hyphenationFrequency = when (mergedStyle.hyphens) {
-                Hyphens.Auto -> Layout.HYPHENATION_FREQUENCY_NORMAL
-                else -> Layout.HYPHENATION_FREQUENCY_NONE
-            }
+            textView.hyphenationFrequency =
+                when (mergedStyle.hyphens) {
+                    Hyphens.Auto -> Layout.HYPHENATION_FREQUENCY_NORMAL
+                    else -> Layout.HYPHENATION_FREQUENCY_NONE
+                }
 
             // TODO: handle style.textMotion
 
@@ -203,20 +210,21 @@ private fun TextView.applyMergedStyle(
 
     val spannable = SpannableString(rawText)
 
-    val commonSpan = object : MetricAffectingSpan() {
-        val skewX = mergedStyle.textGeometricTransform?.skewX
-        val stroke = mergedStyle.drawStyle as? Stroke
+    val commonSpan =
+        object : MetricAffectingSpan() {
+            val skewX = mergedStyle.textGeometricTransform?.skewX
+            val stroke = mergedStyle.drawStyle as? Stroke
 
-        override fun updateDrawState(p: TextPaint) {
-            skewX?.let { p.textSkewX = it }
-            stroke?.let {
-                p.style = Paint.Style.STROKE
-                p.strokeWidth = it.width
+            override fun updateDrawState(p: TextPaint) {
+                skewX?.let { p.textSkewX = it }
+                stroke?.let {
+                    p.style = Paint.Style.STROKE
+                    p.strokeWidth = it.width
+                }
             }
-        }
 
-        override fun updateMeasureState(p: TextPaint) = updateDrawState(p)
-    }
+            override fun updateMeasureState(p: TextPaint) = updateDrawState(p)
+        }
     spannable.setSpan(commonSpan, 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
     mergedStyle.textIndent?.let { indent ->
@@ -231,18 +239,20 @@ private fun TextView.applyMergedStyle(
             BackgroundColorSpan(mergedStyle.background.toArgb()),
             0,
             spannable.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
     }
 
-    val shiftPx = mergedStyle.baselineShift?.let { shift ->
-        val factor = when (shift) {
-            BaselineShift.Superscript -> 0.5f
-            BaselineShift.Subscript -> -0.5f
-            else -> shift.multiplier
-        }
-        (textSize * factor).toInt()
-    } ?: 0
+    val shiftPx =
+        mergedStyle.baselineShift?.let { shift ->
+            val factor =
+                when (shift) {
+                    BaselineShift.Superscript -> 0.5f
+                    BaselineShift.Subscript -> -0.5f
+                    else -> shift.multiplier
+                }
+            (textSize * factor).toInt()
+        } ?: 0
 
     val lineHeightPx = with(density) { mergedStyle.lineHeight.toPx().roundToInt() }
     val composeSpan = ComposeLineHeightSpan(lineHeightPx, mergedStyle.lineHeightStyle, shiftPx)
