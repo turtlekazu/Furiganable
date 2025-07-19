@@ -264,7 +264,7 @@ private fun calculateAnnotatedString(
                         Placeholder(
                             width = width,
                             height = height,
-                            placeholderVerticalAlign = PlaceholderVerticalAlign.TextTop,
+                            placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
                         ),
                     children = {
                         Box(
