@@ -190,7 +190,7 @@ You can customize the appearance of the furigana text by passing additional para
 
 - **`furiganaLineHeight`**:  
   Line height for the furigana text.  
-  Defaults to `furiganaFontSize * 1.2f` if unspecified.
+  Defaults to `furiganaFontSize` if unspecified.
 
 - **`furiganaLetterSpacing`**:  
   Letter spacing for the furigana text.  
