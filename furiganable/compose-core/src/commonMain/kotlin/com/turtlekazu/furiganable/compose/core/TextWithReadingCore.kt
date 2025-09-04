@@ -1,5 +1,6 @@
 package com.turtlekazu.furiganable.compose.core
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
@@ -175,7 +176,7 @@ fun TextWithReadingCore(
         val fontResolver = LocalFontFamilyResolver.current
 
         val (textContent, inlineContent) =
-            remember(formattedText) {
+            remember(formattedText, isSystemInDarkTheme()) {
                 calculateAnnotatedString(
                     textDataList = formattedText.toTextData(),
                     showReadings = furiganaEnabled,
@@ -293,14 +294,7 @@ private fun calculateAnnotatedString(
                                 modifier = Modifier.wrapContentWidth(unbounded = true),
                                 text = text,
                                 color = style.color,
-                                style =
-                                    style.merge(
-                                        lineHeightStyle =
-                                            LineHeightStyle(
-                                                alignment = LineHeightStyle.Alignment.Proportional,
-                                                trim = LineHeightStyle.Trim.Both,
-                                            ),
-                                    ),
+                                style = style,
                                 maxLines = 1,
                                 softWrap = false,
                                 overflow = TextOverflow.Visible,
@@ -330,11 +324,6 @@ private fun calculateAnnotatedString(
                                             style.merge(
                                                 fontSize = furiganaFontSize,
                                                 lineHeight = furiganaLineHeight,
-                                                lineHeightStyle =
-                                                    LineHeightStyle(
-                                                        alignment = LineHeightStyle.Alignment.Proportional,
-                                                        trim = LineHeightStyle.Trim.Both,
-                                                    ),
                                                 letterSpacing = furiganaLetterSpacing,
                                             ),
                                     )
