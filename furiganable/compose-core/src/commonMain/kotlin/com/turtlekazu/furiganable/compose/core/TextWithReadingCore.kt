@@ -1,5 +1,6 @@
 package com.turtlekazu.furiganable.compose.core
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
@@ -175,7 +176,7 @@ fun TextWithReadingCore(
         val fontResolver = LocalFontFamilyResolver.current
 
         val (textContent, inlineContent) =
-            remember(formattedText) {
+            remember(formattedText, isSystemInDarkTheme()) {
                 calculateAnnotatedString(
                     textDataList = formattedText.toTextData(),
                     showReadings = furiganaEnabled,
