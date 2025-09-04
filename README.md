@@ -29,16 +29,17 @@ Module | Recommended | Description | Use Case
 
  Android (> 28) | Android (<= 28) | iOS 18 
  --- | --- | ---
- <img src="https://github.com/user-attachments/assets/5c1ef11e-01e5-45c6-9894-5e6d6272cdf0" width="320px"> | <img src="https://github.com/user-attachments/assets/aca9e7f7-4fcf-4133-9857-af5e9b9ee746" width="320px"> | <img src="https://github.com/user-attachments/assets/0cc3ef5c-94fb-429b-818a-8d379f5fec47" width="320px">
+ <img src="https://github.com/user-attachments/assets/99fd2c08-76a4-4af0-b9be-337471b705ca" width="320px"> | <img src="https://github.com/user-attachments/assets/ad6ffb01-117d-48bf-9475-579e741e0876" width="320px"> | <img src="https://github.com/user-attachments/assets/33511821-f125-4ea1-afda-fb2b3b55815f" width="320px">
     
 </details>
+
 
 <details open>
     <summary>Material 3</summary>
 
  Android (> 28) | Android (<= 28) | iOS 18 
  --- | --- | ---
- <img src="https://github.com/user-attachments/assets/d0fbad6e-0805-4e59-b7f3-6a8caeac3e9b" width="320px"> | <img src="https://github.com/user-attachments/assets/313ac5b9-4bb9-4a52-b142-f2fcc9c2b582" width="320px"> | <img src="https://github.com/user-attachments/assets/c7dda46b-5692-4fa5-aa5e-a1dd2a119cb4" width="320px">
+ <img src="https://github.com/user-attachments/assets/e4a50bf5-1ac2-4f46-a768-68ed1ec21dae" width="320px"> | <img src="https://github.com/user-attachments/assets/db34f77c-d6e7-4544-aeff-6755fe7cb22d" width="320px"> | <img src="https://github.com/user-attachments/assets/99c41d29-c300-4a48-8375-bdcd6f183856" width="320px">
 
 </details>
 
