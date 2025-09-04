@@ -3,8 +3,10 @@ package com.turtlekazu.furiganable.demo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
@@ -52,7 +54,7 @@ fun App() {
                         .fillMaxWidth()
                         .safeDrawingPadding(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
                 ) {
                     TextWithReading(
                         formattedText = "Compose Material 2",
@@ -72,11 +74,13 @@ fun App() {
                         )
                     }
 
+                    Spacer(modifier = Modifier.height(60.dp))
+
                     AppThemeM3 {
                         androidx.compose.material3.Surface {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(15.dp),
                             ) {
                                 com.turtlekazu.furiganable.compose.m3.TextWithReading(
                                     formattedText = "Compose Material 3",
@@ -95,6 +99,8 @@ fun App() {
                                         style = style,
                                     )
                                 }
+
+                                Spacer(modifier = Modifier.height(60.dp))
                             }
                         }
                     }
