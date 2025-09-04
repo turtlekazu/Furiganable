@@ -293,14 +293,7 @@ private fun calculateAnnotatedString(
                                 modifier = Modifier.wrapContentWidth(unbounded = true),
                                 text = text,
                                 color = style.color,
-                                style =
-                                    style.merge(
-                                        lineHeightStyle =
-                                            LineHeightStyle(
-                                                alignment = LineHeightStyle.Alignment.Proportional,
-                                                trim = LineHeightStyle.Trim.Both,
-                                            ),
-                                    ),
+                                style = style,
                                 maxLines = 1,
                                 softWrap = false,
                                 overflow = TextOverflow.Visible,
@@ -330,11 +323,6 @@ private fun calculateAnnotatedString(
                                             style.merge(
                                                 fontSize = furiganaFontSize,
                                                 lineHeight = furiganaLineHeight,
-                                                lineHeightStyle =
-                                                    LineHeightStyle(
-                                                        alignment = LineHeightStyle.Alignment.Proportional,
-                                                        trim = LineHeightStyle.Trim.Both,
-                                                    ),
                                                 letterSpacing = furiganaLetterSpacing,
                                             ),
                                     )
