@@ -54,11 +54,8 @@ internal class ComposeLineHeightSpan(
                 else -> proportionalPads(fm, origin)
             }
 
-        val paraStart = (start downTo 0).firstOrNull { text[it] == '\n' }?.plus(1) ?: 0
-        val paraEnd = (end until text.length).firstOrNull { text[it] == '\n' } ?: text.length
-
-        val isFirstLine = start == paraStart
-        val isLastLine = end == paraEnd
+        val isFirstLine = (start == 0)
+        val isLastLine = (end == text.length)
 
         var finalTop =
             when (trim) {
