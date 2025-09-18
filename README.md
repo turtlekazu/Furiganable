@@ -57,6 +57,10 @@ Unsupported at the moment
 
 If you depend on these APIs, the library may not yet meet your requirements. PRs welcome.
 
+## Known Issues
+
+When using `lineHeightStyle` with any trim option other than `LineHeightStyle.Trim.None`, text with furigana becomes misaligned compared to text without furigana.
+
 # Usage
 
 ## Add dependency on this library
