@@ -211,7 +211,7 @@ See [demo app code](demoApp/composeApp/src/commonMain/kotlin/com/turtlekazu/furi
 
 # License
 
-Copyright 2025 turtlekazu
+Copyright 2026 turtlekazu
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
