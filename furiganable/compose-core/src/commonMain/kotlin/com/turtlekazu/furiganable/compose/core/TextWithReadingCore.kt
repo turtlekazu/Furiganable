@@ -236,7 +236,7 @@ private fun calculateAnnotatedString(
     val inlineContent = mutableMapOf<String, InlineTextContent>()
 
     return buildAnnotatedString {
-        for (elem in textDataList) {
+        for ((index, elem) in textDataList.withIndex()) {
             val text = elem.text
             val reading = elem.reading
 
@@ -244,6 +244,8 @@ private fun calculateAnnotatedString(
                 append(text)
                 continue
             }
+
+            val inlineId = "ruby_$index"
             val height =
                 if (style.lineHeight.isSpecified) {
                     style.lineHeight
@@ -276,8 +278,8 @@ private fun calculateAnnotatedString(
 
             val width = max(furiganaWidth, textWidth).sp
 
-            appendInlineContent(text, text)
-            inlineContent[text] =
+            appendInlineContent(inlineId, text)
+            inlineContent[inlineId] =
                 InlineTextContent(
                     placeholder =
                         Placeholder(
