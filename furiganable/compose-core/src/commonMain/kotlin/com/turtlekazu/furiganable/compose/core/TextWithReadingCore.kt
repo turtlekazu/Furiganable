@@ -278,6 +278,20 @@ private fun calculateAnnotatedString(
 
             val width = max(furiganaWidth, textWidth).sp
 
+            // When base and reading have the same character count,
+            // widen furigana letter-spacing so each reading character
+            // sits directly above its corresponding base character.
+            val adjustedFuriganaLetterSpacing =
+                if (text.length == reading.length &&
+                    reading.length > 1 &&
+                    textWidth > furiganaWidth
+                ) {
+                    (furiganaLetterSpacing.value +
+                        (textWidth - furiganaWidth) / reading.length).sp
+                } else {
+                    furiganaLetterSpacing
+                }
+
             appendInlineContent(inlineId, text)
             inlineContent[inlineId] =
                 InlineTextContent(
@@ -350,7 +364,7 @@ private fun calculateAnnotatedString(
                                             style.merge(
                                                 fontSize = furiganaFontSize,
                                                 lineHeight = furiganaLineHeight,
-                                                letterSpacing = furiganaLetterSpacing,
+                                                letterSpacing = adjustedFuriganaLetterSpacing,
                                             ),
                                     )
                                 }
