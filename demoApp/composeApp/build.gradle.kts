@@ -9,6 +9,8 @@ plugins {
 }
 
 kotlin {
+    jvm("desktop")
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
@@ -44,6 +46,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(project(":furiganable:compose-m2"))
             implementation(project(":furiganable:compose-m3"))
+        }
+        getByName("desktopMain").dependencies {
+            implementation(compose.desktop.currentOs)
         }
     }
 }
@@ -90,4 +95,10 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+}
+
+compose.desktop {
+    application {
+        mainClass = "com.turtlekazu.furiganable.demo.MainKt"
+    }
 }
