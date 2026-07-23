@@ -286,8 +286,10 @@ private fun calculateAnnotatedString(
                     reading.length > 1 &&
                     textWidth > furiganaWidth
                 ) {
-                    (furiganaLetterSpacing.value +
-                        (textWidth - furiganaWidth) / reading.length).sp
+                    (
+                        furiganaLetterSpacing.value +
+                            (textWidth - furiganaWidth) / reading.length
+                    ).sp
                 } else {
                     furiganaLetterSpacing
                 }
