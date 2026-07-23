@@ -2,7 +2,9 @@ package com.turtlekazu.furiganable.compose.core
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.BasicText
@@ -278,21 +280,8 @@ private fun calculateAnnotatedString(
 
             val width = max(furiganaWidth, textWidth).sp
 
-            // When base and reading have the same character count,
-            // widen furigana letter-spacing so each reading character
-            // sits directly above its corresponding base character.
-            val adjustedFuriganaLetterSpacing =
-                if (text.length == reading.length &&
-                    reading.length > 1 &&
-                    textWidth > furiganaWidth
-                ) {
-                    (
-                        furiganaLetterSpacing.value +
-                            (textWidth - furiganaWidth) / reading.length
-                    ).sp
-                } else {
-                    furiganaLetterSpacing
-                }
+            val alignReadingPerCharacter =
+                text.length == reading.length && reading.length > 1 && textWidth > furiganaWidth
 
             appendInlineContent(inlineId, text)
             inlineContent[inlineId] =
@@ -334,41 +323,68 @@ private fun calculateAnnotatedString(
                             )
 
                             if (showReadings) {
-                                Box(
-                                    modifier =
-                                        Modifier
-                                            .graphicsLayer {
-                                                translationY =
-                                                    -(
-                                                        style.fontSize.toPx() * 0.5f +
-                                                            furiganaFontSize.toPx() * 0.5f +
-                                                            furiganaGap.toPx() +
-                                                            when (style.lineHeightStyle?.alignment) {
-                                                                LineHeightStyle.Alignment.Center ->
-                                                                    0f
-                                                                LineHeightStyle.Alignment.Top ->
-                                                                    -style.fontSize.toPx() * 0.5f
-                                                                LineHeightStyle.Alignment.Bottom ->
-                                                                    style.fontSize.toPx() * 0.5f
-                                                                else -> 0f
-                                                            }
-                                                    )
-                                            },
-                                ) {
-                                    TextSpacingRemoved(
-                                        modifier = Modifier.wrapContentSize(unbounded = true),
-                                        text = reading,
-                                        softWrap = false,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Visible,
-                                        color = style.color,
-                                        style =
-                                            style.merge(
-                                                fontSize = furiganaFontSize,
-                                                lineHeight = furiganaLineHeight,
-                                                letterSpacing = adjustedFuriganaLetterSpacing,
-                                            ),
-                                    )
+                                val readingModifier =
+                                    Modifier.graphicsLayer {
+                                        translationY =
+                                            -(
+                                                style.fontSize.toPx() * 0.5f +
+                                                    furiganaFontSize.toPx() * 0.5f +
+                                                    furiganaGap.toPx() +
+                                                    when (style.lineHeightStyle?.alignment) {
+                                                        LineHeightStyle.Alignment.Center -> 0f
+                                                        LineHeightStyle.Alignment.Top ->
+                                                            -style.fontSize.toPx() * 0.5f
+                                                        LineHeightStyle.Alignment.Bottom ->
+                                                            style.fontSize.toPx() * 0.5f
+                                                        else -> 0f
+                                                    }
+                                            )
+                                    }
+
+                                if (alignReadingPerCharacter) {
+                                    // Text renderers distribute letter spacing differently. Explicit cells keep
+                                    // each reading character centered above its corresponding base character.
+                                    Row(
+                                        modifier = readingModifier.fillMaxWidth(),
+                                    ) {
+                                        reading.forEach { character ->
+                                            Box(
+                                                modifier = Modifier.weight(1f),
+                                                contentAlignment = Alignment.Center,
+                                            ) {
+                                                BasicText(
+                                                    text = character.toString(),
+                                                    modifier = Modifier.wrapContentSize(unbounded = true),
+                                                    style =
+                                                        style.merge(
+                                                            fontSize = furiganaFontSize,
+                                                            lineHeight = furiganaLineHeight,
+                                                            letterSpacing = 0.sp,
+                                                        ),
+                                                    softWrap = false,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Visible,
+                                                )
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    Box(modifier = readingModifier) {
+                                        TextSpacingRemoved(
+                                            modifier = Modifier.wrapContentSize(unbounded = true),
+                                            text = reading,
+                                            softWrap = false,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Visible,
+                                            color = style.color,
+                                            style =
+                                                style.merge(
+                                                    fontSize = furiganaFontSize,
+                                                    lineHeight = furiganaLineHeight,
+                                                    letterSpacing = furiganaLetterSpacing,
+                                                ),
+                                        )
+                                    }
                                 }
                             }
                         }
