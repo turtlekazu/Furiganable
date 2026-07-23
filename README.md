@@ -6,7 +6,7 @@ This library is heavily inspired by the [android-compose-furigana](https://githu
 
 # Features
 
-- Compatible with Compose Multiplatform (Android, iOS)
+- Compatible with Compose Multiplatform (Android, iOS, Desktop/JVM)
 - Compatible with both Material 2 and Material 3 libraries
 - Easily add furigana by using a simple predefined format, such as `[漢字[かんじ]]`.
 - Supports Localization
@@ -208,6 +208,22 @@ You can customize the appearance of the furigana text by passing additional para
 # Examples
 
 See [demo app code](demoApp/composeApp/src/commonMain/kotlin/com/turtlekazu/furiganable/demo/App.kt) for more examples.
+
+## Run the demo
+
+### Android
+
+Open the project in Android Studio and run the `composeApp` configuration.
+
+### iOS
+
+Open `demoApp/iosApp/iosApp.xcodeproj` in Xcode and run the `iosApp` scheme.
+
+### Desktop
+
+```shell
+./gradlew :demoApp:composeApp:run
+```
 
 # License
 
